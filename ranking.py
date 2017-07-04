@@ -46,6 +46,7 @@ class Competition():
                  gender = 'male',
                  type = 'singles',
                  is_cup = False,
+                 is_cup_final = False,
                  is_mo = False,
                  is_mm = False,
                  is_sm = False,
@@ -71,12 +72,12 @@ class Competition():
             return 0
         if self.type is 'singles':
             points = CUP_POINTS
-            if self.is_sm:
+            if self.is_sm or self.is_cup_final:
                 points = CUP_POINTS_SM
 
         elif (self.type is 'pairs') or (self.type is 'team'):
             points = CUP_POINTS_TEAM
-            if self.is_sm:
+            if self.is_sm or self.is_cup_final:
                 points = CUP_POINTS_TEAM_SM
         else:
             raise ValueError
