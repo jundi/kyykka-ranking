@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+# Number of competitions
 MAX_PAIRS_CUP_COMPETITIONS = 5
 NUM_PAIRS_CUP_COMPETITIONS = 6
 
@@ -15,6 +16,7 @@ NUM_SINGLES_CUP_COMPETITIONS = 6
 MAX_MM_COMPETITIONS = 3
 MAX_MO_COMPETITIONS = 2 # SM not included
 
+# Points for competition type
                       #1  #2  #3  #4  #5  #6  #7  #8  #9 #10
 CUP_POINTS         = [15, 13, 11,  9,  7,  5,  3,  1,        ]
 CUP_POINTS_SM      = [20, 18, 16, 14, 12, 10,  8,  6,  4,  2,]
@@ -29,9 +31,10 @@ MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
 class Player():
 
-    def __init__(self, id, name):
+    def __init__(self, id, name, serie='MM'):
         self.id = id
         self.name = name
+        self.serie = serie
         self.cup_points = 0
         self.poy_points = 0
         self.mo_points = 0
@@ -43,8 +46,7 @@ class Competition():
     def __init__(self,
                  id,
                  name,
-                 gender = 'male',
-                 type = 'singles',
+                 series = ['MM','MA','MB','MV','NM','NA','NV','MT','NP'],
                  is_cup = False,
                  is_cup_final = False,
                  is_mo = False,
@@ -54,7 +56,7 @@ class Competition():
         ):
         self.id = id
         self.name = name
-        self.type = type
+        self.series = series
         self.is_cup = is_cup,
         self.is_sm = is_sm,
         self.is_mm = is_mm,
@@ -67,15 +69,15 @@ class Competition():
         else:
             return 0
 
-    def cup_points(self, position):
+    def cup_points(self, position, serie):
         if not self.is_cup:
             return 0
-        if self.type is 'singles':
+        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
             points = CUP_POINTS
             if self.is_sm or self.is_cup_final:
                 points = CUP_POINTS_SM
 
-        elif (self.type is 'pairs') or (self.type is 'team'):
+        elif serie in ['MT','MP','NP']:
             points = CUP_POINTS_TEAM
             if self.is_sm or self.is_cup_final:
                 points = CUP_POINTS_TEAM_SM
@@ -83,8 +85,8 @@ class Competition():
             raise ValueError
         return self.get_points(points, position)
 
-    def mm_points(self, position):
-        if self.type is 'singles':
+    def mm_points(self, position, serie):
+        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
             if self.is_mm:
                 points = MO_POINTS
                 if self.is_sm:
@@ -92,8 +94,8 @@ class Competition():
                 return self.get_points(points, position)
         return 0
 
-    def mo_points(self, position):
-        if self.type is 'singles':
+    def mo_points(self, position, serie):
+        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
             if self.is_mm:
                 points = MO_POINTS
                 if self.is_sm:
@@ -101,8 +103,8 @@ class Competition():
                 return self.get_points(points, position)
         return 0
 
-    def poy_points(self, position):
-        if self.type is 'singles':
+    def poy_points(self, position, serie):
+        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
             points = POY_POINTS
             if self.is_cup:
                 points = POY_POINTS_CUP
@@ -128,6 +130,7 @@ players = [
         name = 'Hokkinen',
     ),
 ]
+
 
 competitions = [
     Competition(
@@ -166,21 +169,23 @@ for player in players:
         # Cup-points
         if competition.is_pentathlon:
             cup_pentathlon_points = max(cup_pentathlon_points,
-                                        competition.cup_points(position))
+                                        competition.cup_points(position,
+                                                               player.serie))
 
         else:
-            cup_points.append(competition.cup_points(position))
+            cup_points.append(competition.cup_points(position,
+                                                     player.serie))
 
         # POY-POINTS
-        poy_points.append(competition.poy_points(position))
+        poy_points.append(competition.poy_points(position, player.serie))
 
         # World cup qualification points
-        mm_points.append(competition.mm_points(position))
+        mm_points.append(competition.mm_points(position, player.serie))
 
         # Northern countries championship qualification points
         if competition.is_sm:
-            mo_sm_points = competition.mo_points(position)
-        mo_points.append(competition.mo_points(position))
+            mo_sm_points = competition.mo_points(position, player.serie)
+        mo_points.append(competition.mo_points(position, player.serie))
 
 
     player.cup_points = cup_pentathlon_points + \
