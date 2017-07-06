@@ -116,39 +116,65 @@ class Competition():
 
 
 
-players = [
-    Player(
-        id = 1,
-        name = 'Mikkolainen',
-    ),
-    Player(
-        id = 2,
-        name = 'Sorvali',
-    ),
-    Player(
-        id = 3,
-        name = 'Hokkinen',
-    ),
-]
+n = 0
+players = []
+with open('pellaajat', 'r') as pelaajatiedosto:
+    for line in pelaajatiedosto:
+        name = line
+        players.append(
+            Player(
+                id = n,
+                name = name,
+                )
+        )
+        n = n+1
 
 
-competitions = [
-    Competition(
-        id = 1,
-        name = 'Nääskyykkä',
-        is_cup = True,
-        is_mm = True,
-    ),
-    Competition(
-        id = 2,
-        name = 'S-kyykkä',
-        is_mm = True,
-    ),
-]
+n = 0
+competitions = []
+with open('kisat', 'r') as kisatiedosto:
+    for line in kisatiedosto:
+        fields = line.split(',')
+        name = fields[0]
+        is_cup = fields[1],
+        is_cup_final = fields[2],
+        is_mo = fields[3],
+        is_mm = fields[4],
+        is_sm = fields[5],
+        is_pentathlon = fields[6],
+        competitions.append(
+            Competition(
+                id = n,
+                name = name,
+                is_cup = is_cup,
+                is_cup_final = is_cup_final,
+                is_mo = is_mo,
+                is_mm = is_mm,
+                is_sm = is_sm,
+                is_pentathlon = is_pentathlon,
+                )
+        )
+        n = n+1
 
 results = {
-    1:[1,2,3],
-    2:[3,2,1],
+    0:[1,2,3],
+    1:[],
+    2:[],
+    3:[],
+    4:[],
+    5:[],
+    6:[],
+    7:[],
+    8:[],
+    9:[],
+    10:[],
+    11:[],
+    12:[],
+    13:[],
+    14:[],
+    15:[],
+    16:[],
+    17:[],
 }
 
 for player in players:
