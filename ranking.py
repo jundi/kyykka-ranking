@@ -116,11 +116,12 @@ class Competition():
 
 
 
+# Create player list from file
 n = 0
 players = []
 with open('pellaajat', 'r') as pelaajatiedosto:
     for line in pelaajatiedosto:
-        name = line
+        name = line.strip('\n')
         players.append(
             Player(
                 id = n,
@@ -130,6 +131,7 @@ with open('pellaajat', 'r') as pelaajatiedosto:
         n = n+1
 
 
+# Create competition list from file
 n = 0
 competitions = []
 with open('kisat', 'r') as kisatiedosto:
@@ -156,6 +158,7 @@ with open('kisat', 'r') as kisatiedosto:
         )
         n = n+1
 
+# Set results
 results = {
     0:[1,2,3],
     1:[],
@@ -176,6 +179,18 @@ results = {
     16:[],
     17:[],
 }
+
+
+# Print header
+print("{} {} {} {} {}".format(
+        "name",
+        "cup_points",
+        "poy_points",
+        "mo_points",
+        "mm_points",
+    )
+)
+
 
 for player in players:
     cup_points = []
