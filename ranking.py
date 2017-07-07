@@ -137,6 +137,7 @@ competitions = []
 with open('kisat', 'r') as kisatiedosto:
     for line in kisatiedosto:
         fields = line.split(',')
+        fields = [x.strip() for x in fields]
         name = fields[0]
         is_cup = fields[1],
         is_cup_final = fields[2],
