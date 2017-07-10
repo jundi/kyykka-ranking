@@ -14,7 +14,7 @@ MAX_SINGLES_CUP_COMPETITIONS = 5
 NUM_SINGLES_CUP_COMPETITIONS = 6
 
 MAX_MM_COMPETITIONS = 3
-MAX_MO_COMPETITIONS = 2 # SM not included
+MAX_MO_COMPETITIONS = 3
 
 # Points for competition type
                       #1  #2  #3  #4  #5  #6  #7  #8  #9 #10
@@ -198,14 +198,13 @@ for player in players:
     poy_points = []
     mo_points = []
     mm_points = []
-    mo_sm_points = 0
     cup_pentathlon_points = 0
 
     for competition in competitions:
         try:
             position = results[competition.id].index(player.id)+1
         except ValueError:
-            # Didn't attend
+            # Did not attend
             continue
 
         # Cup-points
@@ -225,16 +224,13 @@ for player in players:
         mm_points.append(competition.mm_points(position, player.serie))
 
         # Northern countries championship qualification points
-        if competition.is_sm:
-            mo_sm_points = competition.mo_points(position, player.serie)
         mo_points.append(competition.mo_points(position, player.serie))
 
 
     player.cup_points = cup_pentathlon_points + \
                         sum(sorted(cup_points)[-MAX_SINGLES_CUP_COMPETITIONS:])
     player.poy_points = sum(poy_points)
-    player.mo_points = mo_sm_points + \
-                       sum(sorted(mo_points)[-MAX_MO_COMPETITIONS:])
+    player.mo_points = sum(sorted(mo_points)[-MAX_MO_COMPETITIONS:])
     player.mm_points = sum(sorted(mm_points)[-MAX_MM_COMPETITIONS:])
 
     line = "{} {} {} {} {}".format(
