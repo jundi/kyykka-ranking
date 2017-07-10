@@ -83,6 +83,7 @@ class Competition():
             return 0
 
     def cup_points(self, position, serie):
+        # TODO: is_cup_MT, is_cup_NP
         if not self.is_cup:
             return 0
         if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
@@ -109,7 +110,7 @@ class Competition():
 
     def mo_points(self, position, serie):
         if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
-            if self.is_mm:
+            if self.is_mo:
                 points = MO_POINTS
                 if self.is_sm:
                     points = MO_POINTS_SM
@@ -149,6 +150,9 @@ n = 0
 competitions = []
 with open('kisat', 'r') as kisatiedosto:
     for line in kisatiedosto:
+
+        if line.startswith('#'):
+            continue
 
         fields = line.split(',')
         fields = [x.strip() for x in fields]
@@ -198,12 +202,14 @@ results = {
     17:[],
 }
 
+
 def get_player_id(player_list, name):
     for player in player_list:
         if player.name == name:
             return player.id
 
     raise Exception('Player "{}" not known'.format(name))
+
 
 def read_result_file(player_list, result_file_name):
     results = []
@@ -212,6 +218,7 @@ def read_result_file(player_list, result_file_name):
             name = line.strip()
             results.append(get_player_id(player_list, name))
     return results
+
 
 for r in results:
     filename = "tulokset/"+str(r)
@@ -254,7 +261,6 @@ for player in players:
             cup_pentathlon_points = max(cup_pentathlon_points,
                                         competition.cup_points(position,
                                                                player.serie))
-
         else:
             cup_points.append(competition.cup_points(position,
                                                      player.serie))
