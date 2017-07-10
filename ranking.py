@@ -70,6 +70,7 @@ class Competition():
         self.name = name
         self.series = series
         self.is_cup = is_cup
+        self.is_cup_final = is_cup_final
         self.is_sm = is_sm
         self.is_mm = is_mm
         self.is_mo = is_mo
@@ -77,7 +78,7 @@ class Competition():
 
     def get_points(self, point_list, position):
         if position <= len(point_list):
-            return point_list[position]
+            return point_list[position-1]
         else:
             return 0
 
@@ -230,6 +231,7 @@ print("{} {} {} {} {}".format(
 
 
 for player in players:
+    # print(player.name)
     cup_points = []
     poy_points = []
     mo_points = []
@@ -237,12 +239,15 @@ for player in players:
     cup_pentathlon_points = 0
 
     for competition in competitions:
+        # print(competition.name)
 
         try:
-            position = results[competition.id].index(player.id)
+            position = results[competition.id].index(player.id)+1
         except ValueError:
             # Did not attend
             continue
+
+        # print(position)
 
         # Cup-points
         if competition.is_pentathlon:
