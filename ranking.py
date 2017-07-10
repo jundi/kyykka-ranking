@@ -14,7 +14,10 @@ MAX_SINGLES_CUP_COMPETITIONS = 5
 NUM_SINGLES_CUP_COMPETITIONS = 6
 
 MAX_MM_COMPETITIONS = 3
+NUM_MM_COMPETITIONS = 4
+
 MAX_MO_COMPETITIONS = 3
+NUM_MO_COMPETITIONS = 4
 
 # Points for competition type
                       #1  #2  #3  #4  #5  #6  #7  #8  #9 #10
@@ -36,6 +39,7 @@ def str2bool(string):
         return True
     else:
         raise Exception
+
 
 class Player():
 
@@ -170,7 +174,8 @@ with open('kisat', 'r') as kisatiedosto:
         )
         n = n+1
 
-# Set results
+
+# Init result list
 results = {
     0:[1,2,3],
     1:[],
@@ -191,6 +196,26 @@ results = {
     16:[],
     17:[],
 }
+
+def get_player_id(player_list, name):
+    for player in player_list:
+        if player.name == name:
+            return player.id
+
+    raise Exception('Player "{}" not known'.format(name))
+
+def read_result_file(player_list, result_file_name):
+    results = []
+    with open(result_file_name, 'r') as result_file:
+        for line in result_file:
+            name = line.strip()
+            results.append(get_player_id(player_list, name))
+    return results
+
+for r in results:
+    filename = "tulokset/"+str(r)
+    results[r] = read_result_file(players, filename)
+
 
 
 # Print header
@@ -230,7 +255,6 @@ for player in players:
                                                      player.serie))
 
         # POY-POINTS
-        print(position)
         poy_points.append(competition.poy_points(position, player.serie))
 
         # World cup qualification points
