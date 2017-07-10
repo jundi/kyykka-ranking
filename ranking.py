@@ -29,6 +29,14 @@ MO_POINTS          = [10,  9,  8,  7,  6,  5,  4,  3,  2,  1,]
 MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
 
+def str2bool(string):
+    if string in ('False', '0'):
+        return False
+    elif string in ('True', '1'):
+        return True
+    else:
+        raise Exception
+
 class Player():
 
     def __init__(self, id, name, serie='MM'):
@@ -57,11 +65,11 @@ class Competition():
         self.id = id
         self.name = name
         self.series = series
-        self.is_cup = is_cup,
-        self.is_sm = is_sm,
-        self.is_mm = is_mm,
-        self.is_mo = is_mo,
-        self.is_pentathlon = is_pentathlon,
+        self.is_cup = is_cup
+        self.is_sm = is_sm
+        self.is_mm = is_mm
+        self.is_mo = is_mo
+        self.is_pentathlon = is_pentathlon
 
     def get_points(self, point_list, position):
         if position <= len(point_list):
@@ -136,15 +144,18 @@ n = 0
 competitions = []
 with open('kisat', 'r') as kisatiedosto:
     for line in kisatiedosto:
+
         fields = line.split(',')
         fields = [x.strip() for x in fields]
+
         name = fields[0]
-        is_cup = fields[1],
-        is_cup_final = fields[2],
-        is_mo = fields[3],
-        is_mm = fields[4],
-        is_sm = fields[5],
-        is_pentathlon = fields[6],
+        is_cup = str2bool(fields[1])
+        is_cup_final = str2bool(fields[2])
+        is_mo = str2bool(fields[3])
+        is_mm = str2bool(fields[4])
+        is_sm = str2bool(fields[5])
+        is_pentathlon = str2bool(fields[6])
+
         competitions.append(
             Competition(
                 id = n,
@@ -201,8 +212,9 @@ for player in players:
     cup_pentathlon_points = 0
 
     for competition in competitions:
+
         try:
-            position = results[competition.id].index(player.id)+1
+            position = results[competition.id].index(player.id)
         except ValueError:
             # Did not attend
             continue
@@ -218,6 +230,7 @@ for player in players:
                                                      player.serie))
 
         # POY-POINTS
+        print(position)
         poy_points.append(competition.poy_points(position, player.serie))
 
         # World cup qualification points
