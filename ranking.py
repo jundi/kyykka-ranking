@@ -229,11 +229,11 @@ class ResultDB():
             read_file(result_file_name)
 
 
-    def read_result_file(self, result_file_name):
+    def read_result_file(self, result_file_name, playerdb):
         self.result_list = []
 
         last_competition_id = None
-        serie = None
+        last_serie = None
 
         with open(result_file_name, 'r') as result_file:
             for line in result_file:
@@ -245,18 +245,21 @@ class ResultDB():
                 competition_id = fields[0]
                 serie = fields[1]
                 name = fields[2]
+                result = [fields[3:]
 
+                if (competition_id is last_competition_id) and (serie is last_serie):
+                    position = position + 1
+                else:
+                    position = 1
 
                 self.result_list.append(
-                    playerdb.get_player_with_name(name).id
+                        competition_id,
+                        playerdb.get_player_with_name(name).id,
+                        serie,
+                        position,
+                        result,
                 )
         return results
-
-
-for r in results:
-    filename = "tulokset/"+str(r)
-    results[r] = read_result_file(players, filename)
-
 
 
 # Print header
