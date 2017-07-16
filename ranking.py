@@ -31,6 +31,10 @@ POY_POINTS_SM      = [30, 20, 10,  5,  3,  1,                ]
 MO_POINTS          = [10,  9,  8,  7,  6,  5,  4,  3,  2,  1,]
 MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
+def str2list(line):
+                fields = line.split(',')
+                fields = [x.strip() for x in fields]
+
 
 def str2bool(string):
     if string in ('False', '0'):
@@ -51,6 +55,36 @@ class Player():
         self.poy_points = 0
         self.mo_points = 0
         self.mm_points = 0
+
+class PlayerDB():
+
+    def __init__(self, player_file_name=None):
+        if player_file_name is not None:
+            read_file(player_file_name)
+
+    def read_file(self, player_file_name):
+
+        # Create player list from file
+        n = 0
+        self.player_list = []
+        with open(player_file_name, 'r') as player_file:
+            for line in player_file:
+                name = line.strip('\n')
+                player_list.append(
+                    Player(
+                        id = n,
+                        name = name,
+                        )
+                )
+                n = n+1
+
+    def get_player_with_name(self, name):
+        for player in self.player_list:
+            if player.name is name:
+                return player
+        raise Exception('Player "{}" not known'.format(name))
+
+
 
 
 class Competition():
@@ -128,96 +162,95 @@ class Competition():
             return self.get_points(points, position)+1 # One point for attending
         return 0
 
+class CompetitionDB():
 
+    def __init__(self, competition_file_name=None):
+        if competition_file_name is not None:
+            read_file(competition_file_name)
 
-# Create player list from file
-n = 0
-players = []
-with open('pellaajat', 'r') as pelaajatiedosto:
-    for line in pelaajatiedosto:
-        name = line.strip('\n')
-        players.append(
-            Player(
-                id = n,
-                name = name,
+    def read_file():
+        # Create competition list from file
+        n = 0
+        competition_list = []
+        with open(competition_file_name, 'r') as competition_file:
+            for line in competition_file:
+
+                if line.startswith('#'):
+                    continue
+
+                fields = str2list(line)
+
+                name = fields[0]
+                is_cup = str2bool(fields[1])
+                is_cup_final = str2bool(fields[2])
+                is_mo = str2bool(fields[3])
+                is_mm = str2bool(fields[4])
+                is_sm = str2bool(fields[5])
+                is_pentathlon = str2bool(fields[6])
+
+                competitions.append(
+                    Competition(
+                        id = n,
+                        name = name,
+                        is_cup = is_cup,
+                        is_cup_final = is_cup_final,
+                        is_mo = is_mo,
+                        is_mm = is_mm,
+                        is_sm = is_sm,
+                        is_pentathlon = is_pentathlon,
+                        )
                 )
-        )
-        n = n+1
+                n = n+1
+
+        def get_competition_with_id(self, id):
+            for competition in self.competition_list:
+                if competition.id is id:
+                    return competition
+        raise Exception('Competition with id "{}" not known'.format(name))
 
 
-# Create competition list from file
-n = 0
-competitions = []
-with open('kisat', 'r') as kisatiedosto:
-    for line in kisatiedosto:
 
-        if line.startswith('#'):
-            continue
+class Result():
+    def __init__(competition_id,
+                 player_id,
+                 serie,
+                 position,
+                 result,
+                 ):
+        self.competition_id = competition_id,
+        self.player_id = player_id,
+        self.serie = serie,
+        self.position = position,
+        self.result = result,
 
-        fields = line.split(',')
-        fields = [x.strip() for x in fields]
+class ResultDB():
+    def __init__(self, result_file_name=None):
+        if competition_file_name is not None:
+            read_file(result_file_name)
 
-        name = fields[0]
-        is_cup = str2bool(fields[1])
-        is_cup_final = str2bool(fields[2])
-        is_mo = str2bool(fields[3])
-        is_mm = str2bool(fields[4])
-        is_sm = str2bool(fields[5])
-        is_pentathlon = str2bool(fields[6])
 
-        competitions.append(
-            Competition(
-                id = n,
-                name = name,
-                is_cup = is_cup,
-                is_cup_final = is_cup_final,
-                is_mo = is_mo,
-                is_mm = is_mm,
-                is_sm = is_sm,
-                is_pentathlon = is_pentathlon,
+    def read_result_file(self, result_file_name):
+        self.result_list = []
+
+        last_competition_id = None
+        serie = None
+
+        with open(result_file_name, 'r') as result_file:
+            for line in result_file:
+
+                if line.startswith('#'):
+                    continue
+
+                fields = str2list(line)
+                competition_id = fields[0]
+                serie = fields[1]
+                name = fields[2]
+
+
+                self.result_list.append(
+                    playerdb.get_player_with_name(name).id
                 )
-        )
-        n = n+1
-
-
-# Init result list
-results = {
-    0:[1,2,3],
-    1:[],
-    2:[],
-    3:[],
-    4:[],
-    5:[],
-    6:[],
-    7:[],
-    8:[],
-    9:[],
-    10:[],
-    11:[],
-    12:[],
-    13:[],
-    14:[],
-    15:[],
-    16:[],
-    17:[],
-}
-
-
-def get_player_id(player_list, name):
-    for player in player_list:
-        if player.name == name:
-            return player.id
-
-    raise Exception('Player "{}" not known'.format(name))
-
-
-def read_result_file(player_list, result_file_name):
-    results = []
-    with open(result_file_name, 'r') as result_file:
-        for line in result_file:
-            name = line.strip()
-            results.append(get_player_id(player_list, name))
-    return results
+        return results
 
 
 for r in results:
