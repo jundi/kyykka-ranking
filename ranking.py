@@ -92,8 +92,11 @@ class Competition():
     def __init__(self,
                  id,
                  name,
-                 series = ['MM','MA','MB','MV','NM','NA','NV','MT','NP'],
-                 is_cup = False,
+                 series = ['MM','MA','MB','MV','NM','NA','NV','MT','MP','NP'],
+                 is_singles_cup = False,
+                 is_MT_cup = False,
+                 is_MP_cup = False,
+                 is_NP_cup = False,
                  is_cup_final = False,
                  is_mo = False,
                  is_mm = False,
@@ -103,64 +106,15 @@ class Competition():
         self.id = id
         self.name = name
         self.series = series
-        self.is_cup = is_cup
+        self.is_MT_cup = is_MT_cup
+        self.is_MP_cup = is_MP_cup
+        self.is_NP_cup = is_NP_cup
         self.is_cup_final = is_cup_final
         self.is_sm = is_sm
         self.is_mm = is_mm
         self.is_mo = is_mo
         self.is_pentathlon = is_pentathlon
 
-    def get_points(self, point_list, position):
-        if position <= len(point_list):
-            return point_list[position-1]
-        else:
-            return 0
-
-    def cup_points(self, position, serie):
-        # TODO: is_cup_MT, is_cup_NP
-        if not self.is_cup:
-            return 0
-        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
-            points = CUP_POINTS
-            if self.is_sm or self.is_cup_final:
-                points = CUP_POINTS_SM
-
-        elif serie in ['MT','MP','NP']:
-            points = CUP_POINTS_TEAM
-            if self.is_sm or self.is_cup_final:
-                points = CUP_POINTS_TEAM_SM
-        else:
-            raise ValueError
-        return self.get_points(points, position)
-
-    def mm_points(self, position, serie):
-        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
-            if self.is_mm:
-                points = MO_POINTS
-                if self.is_sm:
-                    points = MO_POINTS_SM
-                return self.get_points(points, position)
-        return 0
-
-    def mo_points(self, position, serie):
-        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
-            if self.is_mo:
-                points = MO_POINTS
-                if self.is_sm:
-                    points = MO_POINTS_SM
-                return self.get_points(points, position)
-        return 0
-
-    def poy_points(self, position, serie):
-        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
-            points = POY_POINTS
-            if self.is_cup:
-                points = POY_POINTS_CUP
-
-            if self.is_sm:
-                points = POY_POINTS_SM
-            return self.get_points(points, position)+1 # One point for attending
-        return 0
 
 class CompetitionDB():
 
@@ -209,7 +163,6 @@ class CompetitionDB():
         raise Exception('Competition with id "{}" not known'.format(name))
 
 
-
 class Result():
     def __init__(competition_id,
                  player_id,
@@ -223,11 +176,17 @@ class Result():
         self.position = position,
         self.result = result,
 
+
 class ResultDB():
     def __init__(self, result_file_name=None):
         if competition_file_name is not None:
             read_file(result_file_name)
 
+    def get_player_position(self, player_id, competition_id):
+        for result in self.result_list:
+            if result.player_id = player_id \
+                    and result.competition_id = competition_id:
+                return result.position
 
     def read_result_file(self, result_file_name, playerdb):
         self.result_list = []
@@ -259,18 +218,74 @@ class ResultDB():
                         position,
                         result,
                 )
-        return results
 
 
-# Print header
-print("{} {} {} {} {}".format(
-        "name",
-        "cup_points",
-        "poy_points",
-        "mo_points",
-        "mm_points",
-    )
-)
+class PointCalculator():
+    def __init__(self, competition, player, result):
+        self.competition = competition
+        self.result = result
+        self.player = player
+        self.position = result.position
+
+    def get_points(self, point_list, position):
+        if position <= len(point_list):
+            return point_list[position-1]
+        else:
+            return 0
+
+    def cup_points(self, competition_id, serie, player_id):
+
+        if position is None:
+            return None
+
+        if not ( \
+            (self.competition.is_MT_cup and self.serie == 'MT') or \
+            (self.competition.is_MP_cup and self.serie == 'MP') or \
+            (self.competition.is_NP_cup and self.serie == 'NP') or \
+            ):
+            return None
+        if self.serie in ['MM','NM']:
+            points = CUP_POINTS
+            if self.competition.is_sm or self.competition.is_cup_final:
+                self.points = CUP_POINTS_SM
+
+        elif serie in ['MT','MP','NP']:
+            self.points = CUP_POINTS_TEAM
+            if self.competition.is_sm or self.competition.is_cup_final:
+                points = CUP_POINTS_TEAM_SM
+        else:
+            raise ValueError
+        return self.get_points(points, self.position)
+
+    def mm_points(self, competition_id, serie, player_id):
+        if self.serie in ['MM','NM']:
+            if self.competition.is_mm:
+                points = MO_POINTS
+                if self.competition.is_sm:
+                    points = MO_POINTS_SM
+                return self.competition.get_points(points, position)
+        return None
+
+    def mo_points(self, competition_id, serie, player_id)
+        if self.serie in ['MM','NM']:
+            if self.competition.is_mo:
+                points = MO_POINTS
+                if self.competition.is_sm:
+                    points = MO_POINTS_SM
+                return self.competition.get_points(points, position)
+        return None
+
+    def poy_points(self, competition_id, serie, player_id)
+        if serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
+            points = POY_POINTS
+            if competition.is_cup:
+                points = POY_POINTS_CUP
+
+            if competition.is_sm:
+                points = POY_POINTS_SM
+            return competition.get_points(points, position)+1 # One point for attending
+        return None
+
 
 
 for player in players:
