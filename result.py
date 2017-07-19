@@ -23,6 +23,22 @@ class ResultDB():
             if result.player_id = player_id \
                     and result.competition_id = competition_id:
                 return result.position
+        return None
+
+    def get_player_result(self, player_id, competition_id):
+        for result in self.result_list:
+            if result.player_id = player_id \
+                    and result.competition_id = competition_id:
+                return result
+        return None
+
+    def get_player_competitions(self, player_id)
+        competition_id_list = []
+        for result in self.result_list:
+            if result.player_id == player_id
+            competition_id_list.append(result.competition_id)
+        return competition_id_list
+
 
     def read_result_file(self, result_file_name, playerdb):
         self.result_list = []

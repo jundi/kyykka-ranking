@@ -36,10 +36,10 @@ class CompetitionDB():
         if competition_file_name is not None:
             read_file(competition_file_name)
 
-    def read_file():
+    def read_file(self, competition_file_name):
         # Create competition list from file
         n = 0
-        competition_list = []
+        self.competition_list = []
         with open(competition_file_name, 'r') as competition_file:
             for line in competition_file:
 
@@ -56,7 +56,7 @@ class CompetitionDB():
                 is_sm = str2bool(fields[5])
                 is_pentathlon = str2bool(fields[6])
 
-                competitions.append(
+                self.competitions.append(
                     Competition(
                         id = n,
                         name = name,
@@ -70,10 +70,9 @@ class CompetitionDB():
                 )
                 n = n+1
 
-        def get_competition_with_id(self, id):
-            for competition in self.competition_list:
-                if competition.id is id:
-                    return competition
-        raise Exception('Competition with id "{}" not known'.format(name))
-
+    def get_competition_with_id(self, id):
+        for competition in self.competition_list:
+            if competition.id is id:
+                return competition
+    raise Exception('Competition with id "{}" not known'.format(name))
 
