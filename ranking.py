@@ -2,7 +2,5 @@
 
 import competition
 import player
-import restult
+import result
 import utils
-
-

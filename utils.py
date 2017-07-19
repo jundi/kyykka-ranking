@@ -1,9 +1,13 @@
+"""Common functions"""
 def str2list(line):
-                fields = line.split(',')
-                fields = [x.strip() for x in fields]
+    """Split line to list of words"""
+    fields = line.split(',')
+    fields = [x.strip() for x in fields]
+    return fields
 
 
 def str2bool(string):
+    """Map string to boolean"""
     if string in ('False', '0'):
         return False
     elif string in ('True', '1'):

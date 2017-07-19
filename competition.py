@@ -70,9 +70,9 @@ class CompetitionDB():
                 )
                 n = n+1
 
-    def get_competition_with_id(self, id):
+    def get_competition_with_id(self, competition_id):
         for competition in self.competition_list:
-            if competition.id is id:
+            if competition.id is competition_id:
                 return competition
-    raise Exception('Competition with id "{}" not known'.format(name))
+        raise Exception('Competition with id "{}" not known'.format(competition_id))
 
