@@ -38,17 +38,19 @@ class Points():
         self.competition = competition
         self.result = result
         self.player = player
-        self.position = result.position
-        self.serie = result.serie
+        if result is None:
+            self.position = None
+            self.serie = None
+        else:
+            self.position = result.position
+            self.serie = result.serie
 
     def get_points(self, point_list, position):
         if position <= len(point_list):
             return point_list[position-1]
-        else:
-            return 0
+        return 0
 
     def cup_points(self):
-
         if self.position is None:
             return None
 
@@ -72,7 +74,10 @@ class Points():
         return self.get_points(points, self.position)
 
     def mm_points(self):
-        if self.serie in ['MM','NM']:
+        if self.position is None:
+            return None
+
+        if self.serie in ['MM', 'NM']:
             if self.competition.is_mm:
                 points = MO_POINTS
                 if self.competition.is_sm:
@@ -81,6 +86,9 @@ class Points():
         return None
 
     def mo_points(self):
+        if self.position is None:
+            return None
+
         if self.serie in ['MM','NM']:
             if self.competition.is_mo:
                 points = MO_POINTS
@@ -90,7 +98,10 @@ class Points():
         return None
 
     def poy_points(self):
-        if self.serie in ['MM','MA','MB','MV','NM','NA','NV','MT','NP']:
+        if self.position is None:
+            return None
+
+        if self.serie in ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MT', 'NP']:
             points = POY_POINTS
             if self.competition.is_cup:
                 points = POY_POINTS_CUP

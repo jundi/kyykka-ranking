@@ -32,8 +32,8 @@ class ResultDB():
 
     def get_player_result(self, player_id, competition_id):
         for result in self.result_list:
-            if result.player_id == player_id \
-                    and result.competition_id == competition_id:
+            if (result.player_id == player_id) \
+                    and (result.competition_id == competition_id):
                 return result
         return None
 
@@ -58,16 +58,19 @@ class ResultDB():
                     continue
 
                 fields = str2list(line)
-                competition_id = fields[0]
+                competition_id = int(fields[0])
                 serie = fields[1]
                 name = fields[2]
-                result = [fields[3:]]
+                result = [int(x) for x in fields[3:]]
 
-                if not (competition_id is last_competition_id \
+                if not (competition_id == last_competition_id \
                         and serie == last_serie):
                     position = 1
                 else:
                     position = position + 1
+
+                last_competition_id = competition_id
+                last_serie = serie
 
                 self.result_list.append(
                     Result(
