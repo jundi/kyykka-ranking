@@ -41,3 +41,10 @@ class PlayerDB():
                 return player
         raise Exception('Player "{}" not known'.format(name))
 
+    def get_players_of_serie(self, serie):
+        player_list = []
+        for player in self.player_list:
+            if player.serie == serie:
+                player_list.append(player)
+        return player_list
+

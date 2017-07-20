@@ -16,3 +16,6 @@ for player in playerdb.player_list:
 
 resultdb = result.ResultDB('data/tulokset', playerdb)
 
+for player in playerdb.get_players_of_serie('MM'):
+    print(player.name)
+
