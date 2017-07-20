@@ -70,9 +70,11 @@ class ResultDB():
                     position = position + 1
 
                 self.result_list.append(
-                    competition_id,
-                    playerdb.get_player_with_name(name).id,
-                    serie,
-                    position,
-                    result,
+                    Result(
+                        competition_id,
+                        playerdb.get_player_with_name(name).id,
+                        serie,
+                        position,
+                        result,
+                    )
                 )

@@ -20,6 +20,7 @@ class Competition():
         self.id = id
         self.name = name
         self.series = series
+        self.is_singles_cup = is_singles_cup
         self.is_MT_cup = is_MT_cup
         self.is_MP_cup = is_MP_cup
         self.is_NP_cup = is_NP_cup
@@ -34,7 +35,7 @@ class CompetitionDB():
 
     def __init__(self, competition_file_name=None):
         if competition_file_name is not None:
-            read_file(competition_file_name)
+            self.read_file(competition_file_name)
 
     def read_file(self, competition_file_name):
         # Create competition list from file
@@ -49,18 +50,24 @@ class CompetitionDB():
                 fields = str2list(line)
 
                 name = fields[0]
-                is_cup = str2bool(fields[1])
-                is_cup_final = str2bool(fields[2])
-                is_mo = str2bool(fields[3])
-                is_mm = str2bool(fields[4])
-                is_sm = str2bool(fields[5])
-                is_pentathlon = str2bool(fields[6])
+                is_singles_cup = str2bool(fields[1])
+                is_MT_cup = str2bool(fields[2])
+                is_MP_cup = str2bool(fields[3])
+                is_NP_cup = str2bool(fields[4])
+                is_cup_final = str2bool(fields[5])
+                is_mo = str2bool(fields[6])
+                is_mm = str2bool(fields[7])
+                is_sm = str2bool(fields[8])
+                is_pentathlon = str2bool(fields[9])
 
-                self.competitions.append(
+                self.competition_list.append(
                     Competition(
                         id = n,
                         name = name,
-                        is_cup = is_cup,
+                        is_singles_cup = is_singles_cup,
+                        is_MT_cup = is_MT_cup,
+                        is_MP_cup = is_MP_cup,
+                        is_NP_cup = is_NP_cup,
                         is_cup_final = is_cup_final,
                         is_mo = is_mo,
                         is_mm = is_mm,

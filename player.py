@@ -1,19 +1,17 @@
+from utils import str2list
+
 class Player():
 
     def __init__(self, id, name, serie='MM'):
         self.id = id
         self.name = name
         self.serie = serie
-        self.cup_points = 0
-        self.poy_points = 0
-        self.mo_points = 0
-        self.mm_points = 0
 
 class PlayerDB():
 
     def __init__(self, player_file_name=None):
         if player_file_name is not None:
-            read_file(player_file_name)
+            self.read_file(player_file_name)
 
     def read_file(self, player_file_name):
 
@@ -22,18 +20,24 @@ class PlayerDB():
         self.player_list = []
         with open(player_file_name, 'r') as player_file:
             for line in player_file:
-                name = line.strip('\n')
-                player_list.append(
+
+                if line.startswith('#'):
+                    continue
+
+                fields = str2list(line)
+
+                self.player_list.append(
                     Player(
                         id = n,
-                        name = name,
+                        name = fields[1],
+                        serie = fields[0],
                         )
                 )
                 n = n+1
 
     def get_player_with_name(self, name):
         for player in self.player_list:
-            if player.name is name:
+            if player.name == name:
                 return player
         raise Exception('Player "{}" not known'.format(name))
 
