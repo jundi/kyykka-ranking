@@ -172,7 +172,7 @@ class SumPoints():
         # World cup qualification points
         mm_points = []
 
-        for competition in self.competitiondb.competition_list:
+        for competition in self.competitiondb.get_mm_competitions():
             result = self.resultdb.get_player_result(
                 player_id,
                 competition.id

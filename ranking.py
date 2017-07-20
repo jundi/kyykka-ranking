@@ -21,6 +21,13 @@ def main():
     playerdb = PlayerDB('data/pellaajat')
     resultdb = ResultDB('data/tulokset', playerdb)
 
+    for player in playerdb.get_players_of_serie('MM'):
+        print(player.name)
+        print(SumPoints(competitiondb, playerdb,
+            resultdb).mm_points(player.id))
+
+
+
 
 
 
