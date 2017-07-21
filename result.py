@@ -44,7 +44,6 @@ class ResultDB():
                 competition_id_list.append(result.competition_id)
         return competition_id_list
 
-
     def read_result_file(self, result_file_name, playerdb):
         self.result_list = []
 
@@ -81,3 +80,8 @@ class ResultDB():
                         result,
                     )
                 )
+    def player_has_results(self, player_id):
+        for result in self.result_list:
+            if result.player_id == player_id:
+                return True
+        return False
