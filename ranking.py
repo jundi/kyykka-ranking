@@ -39,8 +39,17 @@ def main():
     resultdb = ResultDB('data/tulokset', playerdb)
     pointdb = SumPoints(competitiondb, playerdb, resultdb)
 
+    header_row = ['']
+    for competition in competitiondb.get_mm_competitions():
+        header_row.append(competition.name)
+    header_row.append('yht.')
+
+    print("""<head>
+        <meta charset="UTF-8">
+            <link href="mm.css" rel=stylesheet type="text/css" />
+    </head>""")
     tbl = mm_qualification_table(competitiondb, playerdb, resultdb, pointdb)
-    print (HTML.Table(tbl))
+    print (HTML.Table(tbl, header_row=header_row))
 
 
 
