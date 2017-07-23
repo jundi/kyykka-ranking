@@ -4,13 +4,13 @@ import HTML
 from competition import Competition, CompetitionDB
 from player import Player, PlayerDB
 from result import Result, ResultDB
-from points import Points, SumPoints
+from points import Points, PointsDB
 
 def mm_qualification_table(competitiondb, playerdb, resultdb, pointdb):
     point_sum_dict = {}
     for player in playerdb.get_players_of_serie('MM'):
         if resultdb.player_has_results(player.id):
-            mm_points = SumPoints(
+            mm_points = PointsDB(
                 competitiondb,
                 playerdb,
                 resultdb).mm_points(player.id)
@@ -37,7 +37,7 @@ def main():
     competitiondb = CompetitionDB('data/kisat')
     playerdb = PlayerDB('data/pellaajat')
     resultdb = ResultDB('data/tulokset', playerdb)
-    pointdb = SumPoints(competitiondb, playerdb, resultdb)
+    pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     header_row = ['']
     for competition in competitiondb.get_mm_competitions():
