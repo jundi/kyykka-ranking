@@ -1,26 +1,23 @@
 #!/usr/bin/python3
+""""Print kyykkä rankings"""
 
 import HTML
-from competition import Competition, CompetitionDB
-from player import Player, PlayerDB
-from result import Result, ResultDB
+from competition import CompetitionDB
+from player import PlayerDB
+from result import ResultDB
 from points import Points, PointsDB
 
-def mm_qualification_table(competitiondb, playerdb, resultdb, pointdb):
-    point_sum_dict = {}
-    for player in playerdb.get_players_of_serie('MM'):
-        if resultdb.player_has_results(player.id):
-            mm_points = PointsDB(
-                competitiondb,
-                playerdb,
-                resultdb).mm_points(player.id)
-            point_sum_dict[player.id] = mm_points
 
-    sorted_player_ids = (sorted(point_sum_dict, key=point_sum_dict.get)[::-1])
+def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie):
+    """Get list of world cup qualification points"""
+
+    sorted_player_ids = pointdb.sort_players('mm_points')
 
     rows = []
     for player_id in sorted_player_ids:
         player = playerdb.get_player_with_id(player_id)
+        if player.serie != serie:
+            continue
         cells = []
         cells.append(player.name)
         for competition in competitiondb.get_mm_competitions():
@@ -33,7 +30,10 @@ def mm_qualification_table(competitiondb, playerdb, resultdb, pointdb):
         rows.append(cells)
     return rows
 
+
 def main():
+    """Main function"""
+
     competitiondb = CompetitionDB('data/kisat')
     playerdb = PlayerDB('data/pellaajat')
     resultdb = ResultDB('data/tulokset', playerdb)
@@ -48,13 +48,8 @@ def main():
         <meta charset="UTF-8">
             <link href="mm.css" rel=stylesheet type="text/css" />
     </head>""")
-    tbl = mm_qualification_table(competitiondb, playerdb, resultdb, pointdb)
-    print (HTML.Table(tbl, header_row=header_row))
-
-
-
-
-
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM')
+    print(HTML.Table(tbl, header_row=header_row))
 
 
 if __name__ == "__main__":

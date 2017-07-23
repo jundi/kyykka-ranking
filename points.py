@@ -203,3 +203,14 @@ class PointsDB():
 
         mo_point_sum = sum(sorted(mo_points)[-MAX_MO_COMPETITIONS:])
         return mo_point_sum
+
+    def sort_players(self, attribute_name):
+
+        attribute_dict = {}
+        for player in self.playerdb.player_list:
+            if self.resultdb.player_has_results(player.id):
+                attribute = getattr(self, attribute_name)(player.id)
+                attribute_dict[player.id] = attribute
+
+        sorted_player_ids = (sorted(attribute_dict, key=attribute_dict.get)[::-1])
+        return sorted_player_ids
