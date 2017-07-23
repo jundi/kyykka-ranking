@@ -55,6 +55,7 @@ class Points():
             return None
 
         if not ( \
+            (self.competition.is_singles_cup and self.serie in ['MM','NM']) or \
             (self.competition.is_MT_cup and self.serie == 'MT') or \
             (self.competition.is_MP_cup and self.serie == 'MP') or \
             (self.competition.is_NP_cup and self.serie == 'NP')\
@@ -134,6 +135,11 @@ class PointsDB():
                 # Did not attend
                 continue
 
+            points = Points(competition, player, result).cup_points()
+            if points is None:
+                # No points for this cup
+                continue
+
             if competition.is_pentathlon:
                 cup_pentathlon_points = max(
                     cup_pentathlon_points,
@@ -144,6 +150,7 @@ class PointsDB():
                     Points(competition, player, result).cup_points()
                 )
 
+        print(cup_points)
         cup_point_sum = cup_pentathlon_points + sum(sorted(cup_points)[-MAX_SINGLES_CUP_COMPETITIONS:])
 
         return cup_point_sum
@@ -172,7 +179,7 @@ class PointsDB():
         # World cup qualification points
         mm_points = []
 
-        for competition in self.competitiondb.get_mm_competitions():
+        for competition in self.competitiondb.get_competitions('is_mm'):
             result = self.resultdb.get_player_result(
                 player_id,
                 competition.id

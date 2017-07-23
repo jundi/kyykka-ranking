@@ -8,10 +8,10 @@ from result import ResultDB
 from points import Points, PointsDB
 
 
-def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie):
-    """Get list of world cup qualification points"""
+def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie, point_type, competition_type):
+    """Get list of  qualification points"""
 
-    sorted_player_ids = pointdb.sort_players('mm_points')
+    sorted_player_ids = pointdb.sort_players(point_type)
 
     rows = []
     for player_id in sorted_player_ids:
@@ -20,12 +20,13 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie):
             continue
         cells = []
         cells.append(player.name)
-        for competition in competitiondb.get_mm_competitions():
+        for competition in competitiondb.get_competitions(competition_type):
             result = resultdb.get_player_result(player.id, competition.id)
             if result is None:
                 cells.append("")
             else:
-                cells.append(Points(competition, player, result).mm_points())
+                points = getattr(Points(competition, player, result), point_type)()
+                cells.append(points)
         cells.append(pointdb.mm_points(player_id))
         rows.append(cells)
     return rows
@@ -40,7 +41,7 @@ def main():
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     header_row = ['']
-    for competition in competitiondb.get_mm_competitions():
+    for competition in competitiondb.get_competitions('is_mm'):
         header_row.append(competition.name)
     header_row.append('yht.')
 
@@ -48,7 +49,9 @@ def main():
         <meta charset="UTF-8">
             <link href="mm.css" rel=stylesheet type="text/css" />
     </head>""")
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'is_mm')
+    print(HTML.Table(tbl, header_row=header_row))
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'is_mm')
     print(HTML.Table(tbl, header_row=header_row))
 
 

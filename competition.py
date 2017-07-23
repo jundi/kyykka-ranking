@@ -83,10 +83,10 @@ class CompetitionDB():
                 return competition
         raise Exception('Competition with id "{}" not known'.format(competition_id))
 
-    def get_mm_competitions(self):
+    def get_competitions(self, attribute_name):
         competition_list = []
         for competition in self.competition_list:
-            if competition.is_mm:
+            if getattr(competition, attribute_name):
                 competition_list.append(competition)
         return competition_list
 
