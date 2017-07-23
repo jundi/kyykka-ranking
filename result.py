@@ -9,13 +9,13 @@ class Result():
                  player_id,
                  serie,
                  position,
-                 result,
+                 scores,
                 ):
         self.competition_id = competition_id
         self.player_id = player_id
         self.serie = serie
         self.position = position
-        self.result = result
+        self.scores = scores
 
 
 class ResultDB():
@@ -24,6 +24,7 @@ class ResultDB():
         self.read_result_file(result_file_name, playerdb)
 
     def get_player_position(self, player_id, competition_id):
+        """Get position of player in given competition"""
         for result in self.result_list:
             if result.player_id == player_id \
                     and result.competition_id == competition_id:
@@ -31,6 +32,7 @@ class ResultDB():
         return None
 
     def get_player_result(self, player_id, competition_id):
+        """Get result of player in competition"""
         for result in self.result_list:
             if (result.player_id == player_id) \
                     and (result.competition_id == competition_id):
@@ -38,6 +40,7 @@ class ResultDB():
         return None
 
     def get_player_competitions(self, player_id):
+        """Get list of competitions the player has attended"""
         competition_id_list = []
         for result in self.result_list:
             if result.player_id == player_id:
@@ -45,6 +48,7 @@ class ResultDB():
         return competition_id_list
 
     def read_result_file(self, result_file_name, playerdb):
+        """Initialize the result database from file"""
         self.result_list = []
 
         last_competition_id = None
@@ -60,7 +64,7 @@ class ResultDB():
                 competition_id = int(fields[0])
                 serie = fields[1]
                 name = fields[2]
-                result = [int(x) for x in fields[3:]]
+                scores = [int(x) for x in fields[3:]]
 
                 if not (competition_id == last_competition_id \
                         and serie == last_serie):
@@ -77,10 +81,13 @@ class ResultDB():
                         playerdb.get_player_with_name(name).id,
                         serie,
                         position,
-                        result,
+                        scores,
                     )
                 )
+
+
     def player_has_results(self, player_id):
+        """Check if player has attended any competitions"""
         for result in self.result_list:
             if result.player_id == player_id:
                 return True

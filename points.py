@@ -33,7 +33,7 @@ POY_POINTS_SM      = [30, 20, 10,  5,  3,  1,                ]
 MO_POINTS          = [10,  9,  8,  7,  6,  5,  4,  3,  2,  1,]
 MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
-class Point():
+class Points():
     def __init__(self, competition, player, result):
         self.competition = competition
         self.result = result
