@@ -27,10 +27,21 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie, point_typ
             else:
                 points = getattr(Points(competition, player, result), point_type)()
                 cells.append(points)
-        cells.append(pointdb.mm_points(player_id))
+        cells.append(getattr(pointdb, point_type)(player_id))
         rows.append(cells)
     return rows
 
+def print_html_table(table, competitiondb, competition_type):
+    header_row = ['']
+    for competition in competitiondb.get_competitions(competition_type):
+        header_row.append(competition.name)
+    header_row.append('yht.')
+
+    print("""<head>
+        <meta charset="UTF-8">
+            <link href="mm.css" rel=stylesheet type="text/css" />
+    </head>""")
+    print(HTML.Table(table, header_row=header_row))
 
 def main():
     """Main function"""
@@ -40,19 +51,10 @@ def main():
     resultdb = ResultDB('data/tulokset', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
-    header_row = ['']
-    for competition in competitiondb.get_competitions('is_mm'):
-        header_row.append(competition.name)
-    header_row.append('yht.')
-
-    print("""<head>
-        <meta charset="UTF-8">
-            <link href="mm.css" rel=stylesheet type="text/css" />
-    </head>""")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'is_mm')
-    print(HTML.Table(tbl, header_row=header_row))
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'is_mm')
-    print(HTML.Table(tbl, header_row=header_row))
+    print_html_table(tbl, competitiondb, 'is_mm')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'is_singles_cup')
+    print_html_table(tbl, competitiondb, 'is_singles_cup')
 
 
 if __name__ == "__main__":

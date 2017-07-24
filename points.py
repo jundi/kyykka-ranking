@@ -150,7 +150,6 @@ class PointsDB():
                     Points(competition, player, result).cup_points()
                 )
 
-        print(cup_points)
         cup_point_sum = cup_pentathlon_points + sum(sorted(cup_points)[-MAX_SINGLES_CUP_COMPETITIONS:])
 
         return cup_point_sum
