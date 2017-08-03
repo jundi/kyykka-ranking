@@ -1,5 +1,83 @@
 """Result database module"""
+import codecs
+from html import parser
 from utils import str2list
+
+
+class ResultsParser(parser.HTMLParser):
+    """Parse html code"""
+    resultlist = []
+    name = None
+    position = None
+    name = None
+    team = None
+    serie = None
+    scores = []
+    attr = ""
+    competition = -1
+    def handle_starttag(self, tag, attrs):
+        if len(attrs) > 0:
+            if attrs[0][0] == "class":
+                self.attr = attrs[0][1]
+
+    def handle_data(self, data):
+        if data in ['\n', '\n ','\n  ', 'Sija', 'Nimi']:
+            return
+        if self.attr == 'Sarja':
+            if data in 'Miesten Mestaruussarja':
+                self.serie = 'MM'
+            elif data in ['Miesten A-sarja']:
+                self.serie = 'MA'
+            elif data in ['Miesten B-sarja']:
+                self.serie = 'MB'
+            elif data in ['Miesten Veteraanisarja']:
+                self.serie = 'MV'
+            elif data in ['Naisten Mestaruussarja']:
+                self.serie = 'NM'
+            elif data in ['Naisten A-sarja']:
+                self.serie = 'NA'
+            elif data in ['Naisten Veteraanisarja']:
+                self.serie = 'NV'
+            elif data in ['Miesten joukkuekilpailu']:
+                self.serie = 'MJ'
+            elif data in ['Miesten joukkuekilpailu']:
+                self.serie = 'MP'
+            elif data in ['Naisten parikilpailu']:
+                self.serie = 'NP'
+            elif data in ['Juniorit - 15v sekasarja']:
+                self.serie = 'J15'
+            elif data in ['Juniorit - 10v sekasarja']:
+                self.serie = 'J10'
+            else:
+                assert Exception('Unknown serie: ' + data)
+
+        if self.attr == 'Kilpailu':
+            self.competition = self.competition + 1
+        if self.attr == 'Sija':
+            if self.name is not None and self.position is not None:
+                self.resultlist.append({'competition': self.competition,
+                                        'serie': self.serie,
+                                        'position': self.position,
+                                        'name': self.name,
+                                        'score': self.scores})
+            self.name = None
+            self.position = data
+            self.name = None
+            self.scores = []
+        if self.attr == 'Nimi':
+            self.name = data
+        if self.attr == 'Seura':
+            self.team = data
+        if self.attr == 'Tulos':
+            self.scores.append(data)
+
+    def get_result_list(self):
+        """Return list of results"""
+        return self.resultlist
+
+
+
+
 
 class Result():
     """Result class"""
@@ -21,7 +99,28 @@ class Result():
 class ResultDB():
     """Result database class"""
     def __init__(self, result_file_name, playerdb):
-        self.read_result_file(result_file_name, playerdb)
+        # self.read_result_file(result_file_name, playerdb)
+        self.parse_html_file(result_file_name, playerdb)
+
+    def parse_html_file(self, result_file_name, playerdb):
+        """Read results from html"""
+        with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
+            lines = ""
+            for line in result_file:
+                lines = lines + line
+            resultparser = ResultsParser()
+            resultparser.feed(lines)
+            result_list = resultparser.get_result_list()
+            for result in result_list:
+                self.result_list.append(
+                    Result(
+                        result.competition,
+                        playerdb.get_player_with_name(result.name).id,
+                        result.serie,
+                        result.position,
+                        result.scores,
+                    )
+                )
 
     def get_player_position(self, player_id, competition_id):
         """Get position of player in given competition"""
