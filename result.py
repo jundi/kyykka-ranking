@@ -59,7 +59,7 @@ class ResultsParser(parser.HTMLParser):
                                         'serie': self.serie,
                                         'position': self.position,
                                         'name': self.name,
-                                        'score': self.scores})
+                                        'scores': self.scores})
             self.name = None
             self.position = data
             self.name = None
@@ -103,6 +103,7 @@ class ResultDB():
         self.parse_html_file(result_file_name, playerdb)
 
     def parse_html_file(self, result_file_name, playerdb):
+        self.result_list = []
         """Read results from html"""
         with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
             lines = ""
@@ -111,16 +112,23 @@ class ResultDB():
             resultparser = ResultsParser()
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
+            pla=[]
             for result in result_list:
-                self.result_list.append(
-                    Result(
-                        result.competition,
-                        playerdb.get_player_with_name(result.name).id,
-                        result.serie,
-                        result.position,
-                        result.scores,
-                    )
-                )
+                pla.append(result['serie'] + "," + result['name'])
+                # self.result_list.append(
+                    # Result(
+                        # result['competition'],
+                        # playerdb.get_player_with_name(result['name']).id,
+                        # result['serie'],
+                        # result['position'],
+                        # result['scores'],
+                    # )
+                # )
+            play=list(set(pla))
+            playe=sorted(play)
+            for p in playe:
+                print(p)
+
 
     def get_player_position(self, player_id, competition_id):
         """Get position of player in given competition"""
