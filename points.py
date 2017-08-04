@@ -58,8 +58,8 @@ class Points():
             return None
 
         if not ( \
-            (self.competition.is_singles_cup and self.serie in ['MM','NM']) or \
-            (self.competition.is_MT_cup and self.serie == 'MT') or \
+            (self.competition.is_singles_cup and self.serie in ['MM', 'NM']) or \
+            (self.competition.is_MT_cup and self.serie == 'MJ') or \
             (self.competition.is_MP_cup and self.serie == 'MP') or \
             (self.competition.is_NP_cup and self.serie == 'NP')\
             ):
@@ -67,10 +67,10 @@ class Points():
         if self.serie in ['MM', 'NM']:
             points = CUP_POINTS
             if self.competition.is_sm or self.competition.is_cup_final:
-                self.points = CUP_POINTS_SM
+                points = CUP_POINTS_SM
 
-        elif self.serie in ['MT', 'MP', 'NP']:
-            self.points = CUP_POINTS_TEAM
+        elif self.serie in ['MJ', 'MP', 'NP']:
+            points = CUP_POINTS_TEAM
             if self.competition.is_sm or self.competition.is_cup_final:
                 points = CUP_POINTS_TEAM_SM
         else:

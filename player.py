@@ -1,11 +1,34 @@
 from utils import str2list
 
+SERIES = {
+    'Miesten Mestaruussarja':    'MM',
+    'Miesten A-sarja':           'MA',
+    'Miesten B-sarja':           'MB',
+    'Miesten Veteraanisarja':    'MV',
+    'Naisten Mestaruussarja':    'NM',
+    'Naisten A-sarja':           'NA',
+    'Naisten Veteraanisarja':    'NV',
+    'Miesten joukkuekilpailu':   'MJ',
+    'Miesten parikilpailu':      'MP',
+    'Naisten parikilpailu':      'NP',
+    'Juniorit - 15v sekasarja':  'J15',
+    'Juniorit - 10v sekasarja':  'J10',
+    'Juniorit - 15v pojat':      'JP15',
+    'Juniorit - 15v tytöt':      'JT15',
+    'Juniorit - 10v pojat':      'JP10',
+    'Juniorit - 10v tytöt':      'JT10',
+    'Juniorit - 10v tytÃ¶t':    'JT10',
+}
+
 class Player():
 
     def __init__(self, id, name, serie='MM'):
         self.id = id
         self.name = name
-        self.serie = serie
+        if serie in list(SERIES.values()):
+            self.serie = serie
+        else:
+            raise Exception("Unknown serie: " + serie)
 
 class PlayerDB():
 

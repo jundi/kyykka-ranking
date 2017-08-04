@@ -1,5 +1,6 @@
 """Result database module"""
 import codecs
+import player
 from html import parser
 from utils import str2list
 
@@ -21,35 +22,12 @@ class ResultsParser(parser.HTMLParser):
                 self.attr = attrs[0][1]
 
     def handle_data(self, data):
-        if data in ['\n', '\n ','\n  ', 'Sija', 'Nimi']:
+        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi']:
             return
+        else:
+            data = data.strip()
         if self.attr == 'Sarja':
-            if data in 'Miesten Mestaruussarja':
-                self.serie = 'MM'
-            elif data in ['Miesten A-sarja']:
-                self.serie = 'MA'
-            elif data in ['Miesten B-sarja']:
-                self.serie = 'MB'
-            elif data in ['Miesten Veteraanisarja']:
-                self.serie = 'MV'
-            elif data in ['Naisten Mestaruussarja']:
-                self.serie = 'NM'
-            elif data in ['Naisten A-sarja']:
-                self.serie = 'NA'
-            elif data in ['Naisten Veteraanisarja']:
-                self.serie = 'NV'
-            elif data in ['Miesten joukkuekilpailu']:
-                self.serie = 'MJ'
-            elif data in ['Miesten joukkuekilpailu']:
-                self.serie = 'MP'
-            elif data in ['Naisten parikilpailu']:
-                self.serie = 'NP'
-            elif data in ['Juniorit - 15v sekasarja']:
-                self.serie = 'J15'
-            elif data in ['Juniorit - 10v sekasarja']:
-                self.serie = 'J10'
-            else:
-                assert Exception('Unknown serie: ' + data)
+            self.serie = player.SERIES[data]
 
         if self.attr == 'Kilpailu':
             self.competition = self.competition + 1
