@@ -65,7 +65,7 @@ class ResultsParser(parser.HTMLParser):
             self.name = None
             self.scores = []
         if self.attr == 'Nimi':
-            self.name = data
+            self.name = data.strip()
         if self.attr == 'Seura':
             self.team = data
         if self.attr == 'Tulos':
@@ -104,7 +104,7 @@ class ResultDB():
 
     def generate_player_list(self, result_file_name, playerdb):
         """Read results from html"""
-        # self.result_list = []
+        self.result_list = []
         with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
             lines = ""
             for line in result_file:
@@ -132,13 +132,12 @@ class ResultDB():
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
             for result in result_list:
-                pla.append(result['serie'] + "," + result['name'])
                 self.result_list.append(
                     Result(
                         result['competition'],
                         playerdb.get_player_with_name(result['name']).id,
                         result['serie'],
-                        result['position'],
+                        int(result['position'].strip('.')),
                         result['scores'],
                     )
                 )

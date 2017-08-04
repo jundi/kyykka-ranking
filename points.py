@@ -33,6 +33,9 @@ POY_POINTS_SM      = [30, 20, 10,  5,  3,  1,                ]
 MO_POINTS          = [10,  9,  8,  7,  6,  5,  4,  3,  2,  1,]
 MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
+def remove_none_elements_from_list(list):
+    return [e for e in list if e != None]
+
 class Points():
     def __init__(self, competition, player, result):
         self.competition = competition
@@ -189,7 +192,7 @@ class PointsDB():
 
             mm_points.append(Points(competition, player, result).mm_points())
 
-        mm_point_sum = sum(sorted(mm_points)[-MAX_MM_COMPETITIONS:])
+        mm_point_sum = sum(sorted(remove_none_elements_from_list(mm_points))[-MAX_MM_COMPETITIONS:])
         return mm_point_sum
 
     def mo_points(self, player_id):

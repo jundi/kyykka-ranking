@@ -48,7 +48,7 @@ def main():
 
     competitiondb = CompetitionDB('data/kisat')
     playerdb = PlayerDB('data/pellaajat')
-    resultdb = ResultDB('data/tulokset', playerdb)
+    resultdb = ResultDB('data/results.htm', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'is_mm')
