@@ -102,9 +102,9 @@ class ResultDB():
         # self.read_result_file(result_file_name, playerdb)
         self.parse_html_file(result_file_name, playerdb)
 
-    def parse_html_file(self, result_file_name, playerdb):
-        self.result_list = []
+    def generate_player_list(self, result_file_name, playerdb):
         """Read results from html"""
+        # self.result_list = []
         with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
             lines = ""
             for line in result_file:
@@ -112,22 +112,36 @@ class ResultDB():
             resultparser = ResultsParser()
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
-            pla=[]
+            players=[]
+            for result in result_list:
+                players.append(result['serie'] + "," + result['name'])
+            unique_players=list(set(players))
+            sorted_players=sorted(unique_players)
+            for p in sorted_players:
+                print(p)
+
+
+    def parse_html_file(self, result_file_name, playerdb):
+        """Read results from html"""
+        self.result_list = []
+        with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
+            lines = ""
+            for line in result_file:
+                lines = lines + line
+            resultparser = ResultsParser()
+            resultparser.feed(lines)
+            result_list = resultparser.get_result_list()
             for result in result_list:
                 pla.append(result['serie'] + "," + result['name'])
-                # self.result_list.append(
-                    # Result(
-                        # result['competition'],
-                        # playerdb.get_player_with_name(result['name']).id,
-                        # result['serie'],
-                        # result['position'],
-                        # result['scores'],
-                    # )
-                # )
-            play=list(set(pla))
-            playe=sorted(play)
-            for p in playe:
-                print(p)
+                self.result_list.append(
+                    Result(
+                        result['competition'],
+                        playerdb.get_player_with_name(result['name']).id,
+                        result['serie'],
+                        result['position'],
+                        result['scores'],
+                    )
+                )
 
 
     def get_player_position(self, player_id, competition_id):
