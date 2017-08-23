@@ -22,7 +22,7 @@ class ResultsParser(parser.HTMLParser):
                 self.attr = attrs[0][1]
 
     def handle_data(self, data):
-        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi']:
+        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos']:
             return
         else:
             data = data.strip()
