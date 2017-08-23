@@ -52,8 +52,10 @@ def main():
     resultdb = ResultDB('data/results.htm', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'MM_kars')
-    print_html_table(tbl, competitiondb, 'MM_kars')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'mm_kars')
+    print_html_table(tbl, competitiondb, 'mm_kars')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mo_points', 'mo_kars')
+    print_html_table(tbl, competitiondb, 'mo_kars')
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'MM_cup')
     print_html_table(tbl, competitiondb, 'MM_cup')
 

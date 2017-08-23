@@ -17,6 +17,7 @@ SERIES = {
     'Juniorit - 15v tytöt':      'JT15',
     'Juniorit - 10v pojat':      'JP10',
     'Juniorit - 10v tytöt':      'JT10',
+    'Juniorit - 10v tyt?t':      'JT10',
     'Juniorit - 10v tytÃ¶t':    'JT10',
 }
 
@@ -68,7 +69,7 @@ class PlayerDB():
         for player in self.player_list:
             if player.id == player_id:
                 return player
-        raise Exception('Player "{}" not known'.format(player_id))
+        raise Exception('Player "{}" not known in serie {}'.format(player_id, serie))
 
     def get_players_of_serie(self, serie):
         player_list = []

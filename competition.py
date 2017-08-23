@@ -2,7 +2,7 @@ from utils import str2bool
 from utils import str2list
 
 SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP']
-TAGS = ['MM_kars', 'cup_finaali', 'MO_kars', 'joukkue_SM', 'henk_SM', 'VO']
+TAGS = ['mm_kars', 'cup_finaali', 'mo_kars', 'joukkue_sm', 'henk_sm', 'vo']
 
 class Competition():
 
@@ -11,7 +11,7 @@ class Competition():
                  name,
                  series=['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'NP'],
                  cup=['NM', 'NM', 'MJ', 'MP', 'NP'],
-                 tags=['MO', 'MM', 'SM', 'VO'],
+                 tags=[],
                 ):
         self.competition_id = competition_id
         self.name = name
@@ -20,14 +20,6 @@ class Competition():
         self.tags = tags
         self.tags += ([c + '_cup' for c in self.cup])
 
-        def is_sm():
-            return bool('SM' in self.tags)
-        def is_mm():
-            return bool('MM_kars' in self.tags)
-        def is_mo():
-            return bool('MO_kars' in self.tags)
-        def is_pentathlon():
-            return bool('VO' in self.tags)
 
 
 class CompetitionDB():

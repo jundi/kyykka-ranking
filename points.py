@@ -18,8 +18,8 @@ NUM_SINGLES_CUP_COMPETITIONS = 6
 MAX_MM_COMPETITIONS = 3
 NUM_MM_COMPETITIONS = 4
 
-MAX_MO_COMPETITIONS = 3
-NUM_MO_COMPETITIONS = 4
+MAX_MO_COMPETITIONS = 2
+NUM_MO_COMPETITIONS = 3
 
 # Points for competition type
                       #1  #2  #3  #4  #5  #6  #7  #8  #9 #10
@@ -79,7 +79,7 @@ class Points():
             return None
 
         if self.serie in ['MM', 'NM']:
-            if 'MM_kars' in self.competition.tags:
+            if 'mm_kars' in self.competition.tags:
                 points = MO_POINTS
                 if 'henk_SM' in self.competition.tags:
                     points = MO_POINTS_SM
@@ -90,10 +90,10 @@ class Points():
         if self.position is None:
             return None
 
-        if self.serie in ['MM','NM']:
-            if self.competition.is_mo:
+        if self.serie in ['MM', 'NM']:
+            if 'mo_kars' in self.competition.tags:
                 points = MO_POINTS
-                if self.competition.is_sm:
+                if 'henk_sm' in self.competition.tags:
                     points = MO_POINTS_SM
                 return self.get_points(points, self.position)
         return None
@@ -140,7 +140,7 @@ class PointsDB():
                 # No points for this cup
                 continue
 
-            if 'VO' in competition.tags:
+            if 'vo' in competition.tags:
                 cup_pentathlon_points = max(
                     cup_pentathlon_points,
                     Points(competition, player, result).cup_points()
@@ -178,7 +178,7 @@ class PointsDB():
         # World cup qualification points
         mm_points = []
 
-        for competition in self.competitiondb.get_competitions_with_tag('MM_kars'):
+        for competition in self.competitiondb.get_competitions_with_tag('mm_kars'):
             result = self.resultdb.get_player_result(
                 player_id,
                 competition.competition_id
@@ -195,19 +195,26 @@ class PointsDB():
     def mo_points(self, player_id):
         # Northern countries championship qualification points
         mo_points = []
+        sm_points = 0
 
         for competition in self.competitiondb.competition_list:
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.id
+                competition.competition_id
             )
             if result is None:
                 # Did not attend
                 continue
 
+            if 'henk_sm' in competition.tags:
+                sm_points = Points(competition, player, result).mo_points()
+                if sm_points is None:
+                    sm_points = 0
+                continue
+
             mo_points.append(Points(competition, player, result).mo_points())
 
-        mo_point_sum = sum(sorted(mo_points)[-MAX_MO_COMPETITIONS:])
+        mo_point_sum = sm_points + sum(sorted(remove_none_elements_from_list(mo_points))[-MAX_MO_COMPETITIONS:])
         return mo_point_sum
 
     def sort_players(self, attribute_name):
