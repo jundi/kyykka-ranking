@@ -110,6 +110,10 @@ class ResultDB():
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
             for result in result_list:
+                try:
+                    playerdb.get_player_with_name(result['name']).id
+                except:
+                    print('Unknown player: {},{}'.format(result['serie'], result['name']))
                 self.result_list.append(
                     Result(
                         result['competition'],
