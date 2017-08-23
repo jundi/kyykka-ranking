@@ -2,7 +2,7 @@ from utils import str2bool
 from utils import str2list
 
 SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP']
-TAGS = ['MM_kars', 'cup_finaali', 'MO_kars', 'SM', 'VO']
+TAGS = ['MM_kars', 'cup_finaali', 'MO_kars', 'joukkue_SM', 'henk_SM', 'VO']
 
 class Competition():
 
@@ -18,6 +18,7 @@ class Competition():
         self.series = series
         self.cup = cup
         self.tags = tags
+        self.tags += ([c + '_cup' for c in self.cup])
 
         def is_sm():
             return bool('SM' in self.tags)
@@ -76,10 +77,10 @@ class CompetitionDB():
                 return competition
         raise Exception('Competition with id "{}" not known'.format(competition_id))
 
-    def get_competitions(self, attribute_name):
+    def get_competitions_with_tag(self, tag):
         competition_list = []
         for competition in self.competition_list:
-            if getattr(competition, attribute_name):
+            if tag in competition.tags:
                 competition_list.append(competition)
         return competition_list
 
