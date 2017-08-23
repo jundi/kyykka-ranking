@@ -1,34 +1,32 @@
 from utils import str2bool
 from utils import str2list
 
+SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP']
+TAGS = ['MM_kars', 'cup_finaali', 'MO_kars', 'SM', 'VO']
+
 class Competition():
 
     def __init__(self,
-                 id,
+                 competition_id,
                  name,
-                 series = ['MM','MA','MB','MV','NM','NA','NV','MT','MP','NP'],
-                 is_singles_cup = False,
-                 is_MT_cup = False,
-                 is_MP_cup = False,
-                 is_NP_cup = False,
-                 is_cup_final = False,
-                 is_mo = False,
-                 is_mm = False,
-                 is_sm = False,
-                 is_pentathlon = False,
-        ):
-        self.id = id
+                 series=['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'NP'],
+                 cup=['NM', 'NM', 'MJ', 'MP', 'NP'],
+                 tags=['MO', 'MM', 'SM', 'VO'],
+                ):
+        self.competition_id = competition_id
         self.name = name
         self.series = series
-        self.is_singles_cup = is_singles_cup
-        self.is_MT_cup = is_MT_cup
-        self.is_MP_cup = is_MP_cup
-        self.is_NP_cup = is_NP_cup
-        self.is_cup_final = is_cup_final
-        self.is_sm = is_sm
-        self.is_mm = is_mm
-        self.is_mo = is_mo
-        self.is_pentathlon = is_pentathlon
+        self.cup = cup
+        self.tags = tags
+
+        def is_sm():
+            return bool('SM' in self.tags)
+        def is_mm():
+            return bool('MM_kars' in self.tags)
+        def is_mo():
+            return bool('MO_kars' in self.tags)
+        def is_pentathlon():
+            return bool('VO' in self.tags)
 
 
 class CompetitionDB():
@@ -43,6 +41,8 @@ class CompetitionDB():
         self.competition_list = []
         with open(competition_file_name, 'r') as competition_file:
             for line in competition_file:
+                cup = []
+                tags = []
 
                 if line.startswith('#'):
                     continue
@@ -50,36 +50,29 @@ class CompetitionDB():
                 fields = str2list(line)
 
                 name = fields[0]
-                is_singles_cup = str2bool(fields[1])
-                is_MT_cup = str2bool(fields[2])
-                is_MP_cup = str2bool(fields[3])
-                is_NP_cup = str2bool(fields[4])
-                is_cup_final = str2bool(fields[5])
-                is_mo = str2bool(fields[6])
-                is_mm = str2bool(fields[7])
-                is_sm = str2bool(fields[8])
-                is_pentathlon = str2bool(fields[9])
+                for field in fields[1:]:
+                    if field == '':
+                        continue
+                    if field in SERIES:
+                        cup.append(field)
+                    elif field in TAGS:
+                        tags.append(field)
+                    else:
+                        raise ValueError('Invalid field: ', field)
 
                 self.competition_list.append(
                     Competition(
-                        id = n,
-                        name = name,
-                        is_singles_cup = is_singles_cup,
-                        is_MT_cup = is_MT_cup,
-                        is_MP_cup = is_MP_cup,
-                        is_NP_cup = is_NP_cup,
-                        is_cup_final = is_cup_final,
-                        is_mo = is_mo,
-                        is_mm = is_mm,
-                        is_sm = is_sm,
-                        is_pentathlon = is_pentathlon,
-                        )
+                        competition_id=n,
+                        name=name,
+                        tags=tags,
+                        cup=cup
+                    )
                 )
                 n = n+1
 
     def get_competition_with_id(self, competition_id):
         for competition in self.competition_list:
-            if competition.id is competition_id:
+            if competition.competition_id is competition_id:
                 return competition
         raise Exception('Competition with id "{}" not known'.format(competition_id))
 
