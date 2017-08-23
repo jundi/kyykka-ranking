@@ -57,21 +57,18 @@ class Points():
         if self.position is None:
             return None
 
-        if not ( \
-            (self.competition.is_singles_cup and self.serie in ['MM', 'NM']) or \
-            (self.competition.is_MT_cup and self.serie == 'MJ') or \
-            (self.competition.is_MP_cup and self.serie == 'MP') or \
-            (self.competition.is_NP_cup and self.serie == 'NP')\
-            ):
+        if not self.serie in self.competition.cup:
             return None
         if self.serie in ['MM', 'NM']:
             points = CUP_POINTS
-            if self.competition.is_sm or self.competition.is_cup_final:
+            if 'henk_sm' in self.competition.tags\
+                    or 'cup_finaali' in self.competition.tags:
                 points = CUP_POINTS_SM
 
         elif self.serie in ['MJ', 'MP', 'NP']:
             points = CUP_POINTS_TEAM
-            if self.competition.is_sm or self.competition.is_cup_final:
+            if 'joukkue_sm' in self.competition.tags\
+                    or 'cup_finaali' in self.competition.tags:
                 points = CUP_POINTS_TEAM_SM
         else:
             raise ValueError
@@ -82,9 +79,9 @@ class Points():
             return None
 
         if self.serie in ['MM', 'NM']:
-            if self.competition.is_mm:
+            if 'MM_kars' in self.competition.tags:
                 points = MO_POINTS
-                if self.competition.is_sm:
+                if 'henk_SM' in self.competition.tags:
                     points = MO_POINTS_SM
                 return self.get_points(points, self.position)
         return None
@@ -132,7 +129,7 @@ class PointsDB():
         for competition in self.competitiondb.competition_list:
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.id
+                competition.competition_id
             )
             if result is None:
                 # Did not attend
@@ -143,7 +140,7 @@ class PointsDB():
                 # No points for this cup
                 continue
 
-            if competition.is_pentathlon:
+            if 'VO' in competition.tags:
                 cup_pentathlon_points = max(
                     cup_pentathlon_points,
                     Points(competition, player, result).cup_points()
@@ -181,10 +178,10 @@ class PointsDB():
         # World cup qualification points
         mm_points = []
 
-        for competition in self.competitiondb.get_competitions('is_mm'):
+        for competition in self.competitiondb.get_competitions_with_tag('MM_kars'):
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.id
+                competition.competition_id
             )
             if result is None:
                 # Did not attend
