@@ -8,7 +8,8 @@ from result import ResultDB
 from points import Points, PointsDB
 
 
-def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie, point_type, competition_type):
+def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
+                    point_type, tag):
     """Get list of  qualification points"""
 
     sorted_player_ids = pointdb.sort_players(point_type)
@@ -20,8 +21,8 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie, point_typ
             continue
         cells = []
         cells.append(player.name)
-        for competition in competitiondb.get_competitions(competition_type):
-            result = resultdb.get_player_result(player.id, competition.id)
+        for competition in competitiondb.get_competitions_with_tag(tag):
+            result = resultdb.get_player_result(player.id, competition.competition_id)
             if result is None:
                 cells.append("")
             else:
@@ -31,9 +32,9 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie, point_typ
         rows.append(cells)
     return rows
 
-def print_html_table(table, competitiondb, competition_type):
+def print_html_table(table, competitiondb, tag):
     header_row = ['']
-    for competition in competitiondb.get_competitions(competition_type):
+    for competition in competitiondb.get_competitions_with_tag(tag):
         header_row.append(competition.name)
     header_row.append('yht.')
 
@@ -51,10 +52,10 @@ def main():
     resultdb = ResultDB('data/results.htm', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'is_mm')
-    print_html_table(tbl, competitiondb, 'is_mm')
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'is_singles_cup')
-    print_html_table(tbl, competitiondb, 'is_singles_cup')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'MM_kars')
+    print_html_table(tbl, competitiondb, 'MM_kars')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'MM_cup')
+    print_html_table(tbl, competitiondb, 'MM_cup')
 
 
 if __name__ == "__main__":
