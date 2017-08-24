@@ -198,13 +198,12 @@ class PointsDB():
         sm_points = 0
 
         for competition in self.competitiondb.competition_list:
+            if 'mo_kars' not in competition.tags:
+                continue
             result = self.resultdb.get_player_result(
                 player_id,
                 competition.competition_id
             )
-            if result is None:
-                # Did not attend
-                continue
 
             if 'henk_sm' in competition.tags:
                 sm_points = Points(competition, player, result).mo_points()
@@ -215,6 +214,7 @@ class PointsDB():
             mo_points.append(Points(competition, player, result).mo_points())
 
         mo_point_sum = sm_points + sum(sorted(remove_none_elements_from_list(mo_points))[-MAX_MO_COMPETITIONS:])
+
         return mo_point_sum
 
     def sort_players(self, attribute_name):

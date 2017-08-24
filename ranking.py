@@ -84,10 +84,16 @@ def main():
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     print(HEAD)
+    print("<h2>MM karsinta</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'mm_kars')
     print_html_table(tbl, competitiondb, 'mm_kars')
+
+
+    print("<h2>Maaottelu karsinta</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mo_points', 'mo_kars')
     print_html_table(tbl, competitiondb, 'mo_kars')
+
+    print("<h2>MM Cup</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'MM_cup')
     print_html_table(tbl, competitiondb, 'MM_cup')
     print(TAIL)
