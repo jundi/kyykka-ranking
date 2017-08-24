@@ -38,11 +38,42 @@ def print_html_table(table, competitiondb, tag):
         header_row.append(competition.name)
     header_row.append('yht.')
 
-    print("""<head>
-        <meta charset="UTF-8">
-            <link href="mm.css" rel=stylesheet type="text/css" />
-    </head>""")
     print(HTML.Table(table, header_row=header_row))
+
+HEAD="""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width:100%;
+        }
+        th {
+            font-size:10px;
+            height: 150px;
+            width: 40px;
+            margin-left: 0;
+            margin-right: 0;
+            padding-right: 5px;
+            padding-bottom: 5px;
+            position: relative;
+            writing-mode: sideways-lr;
+        }
+        tr {
+            align: right;
+            height: 16px;
+        }
+        td {
+            align: right;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+"""
+
+TAIL="""</body>
+</html>"""
 
 def main():
     """Main function"""
@@ -52,12 +83,14 @@ def main():
     resultdb = ResultDB('data/results.htm', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
+    print(HEAD)
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'mm_kars')
     print_html_table(tbl, competitiondb, 'mm_kars')
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mo_points', 'mo_kars')
     print_html_table(tbl, competitiondb, 'mo_kars')
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'MM_cup')
     print_html_table(tbl, competitiondb, 'MM_cup')
+    print(TAIL)
 
 
 if __name__ == "__main__":
