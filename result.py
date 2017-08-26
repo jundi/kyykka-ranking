@@ -11,10 +11,8 @@ def generate_player_list(result_file_name):
         for line in result_file:
             lines = lines + line
         resultparser = ResultsParser()
-        print(lines)
         resultparser.feed(lines)
         result_list = resultparser.get_result_list()
-        print(result_list)
         players = []
         for result in result_list:
             players.append(result['serie'] + "," + result['name'])
@@ -37,7 +35,7 @@ class ResultsParser(parser.HTMLParser):
     competition = -1
 
     def handle_starttag(self, tag, attrs):
-        if len(attrs) > 0:
+        if attrs:
             if attrs[0][0] == "class":
                 self.attr = attrs[0][1]
 
@@ -97,6 +95,7 @@ class ResultDB():
     """Result database class"""
     def __init__(self, result_file_name, playerdb):
         # self.read_result_file(result_file_name, playerdb)
+        self.result_list = []
         self.parse_html_file(result_file_name, playerdb)
 
 
@@ -114,8 +113,9 @@ class ResultDB():
             for result in result_list:
                 try:
                     playerdb.get_player_with_name(result['name']).id
-                except:
-                    print('Unknown player: {},{}'.format(result['serie'], result['name']))
+                except ValueError:
+                    print('Unknown player: {},{}'.format(result['serie'],
+                                                         result['name']))
                 self.result_list.append(
                     Result(
                         result['competition'],
@@ -153,8 +153,6 @@ class ResultDB():
 
     def read_result_file(self, result_file_name, playerdb):
         """Initialize the result database from file"""
-        self.result_list = []
-
         last_competition_id = None
         last_serie = None
 

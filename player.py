@@ -63,7 +63,7 @@ class PlayerDB():
         for player in self.player_list:
             if player.name == name:
                 return player
-        raise Exception('Player "{}" not known'.format(name))
+        raise ValueError('Player "{}" not known'.format(name))
 
     def get_player_with_id(self, player_id):
         for player in self.player_list:
