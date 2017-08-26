@@ -1,10 +1,29 @@
 """Result database module"""
+from html import parser
 import codecs
 import player
-from html import parser
 from utils import str2list
 
+def generate_player_list(result_file_name):
+    """Read results from html"""
+    with codecs.open(result_file_name, 'r', 'ISO-8859-15') as result_file:
+        lines = ""
+        for line in result_file:
+            lines = lines + line
+        resultparser = ResultsParser()
+        print(lines)
+        resultparser.feed(lines)
+        result_list = resultparser.get_result_list()
+        print(result_list)
+        players = []
+        for result in result_list:
+            players.append(result['serie'] + "," + result['name'])
+        unique_players = list(set(players))
+        sorted_players = sorted(unique_players)
+        for player_ in sorted_players:
+            print(player_)
 
+# pylint: disable=abstract-method
 class ResultsParser(parser.HTMLParser):
     """Parse html code"""
     resultlist = []
@@ -16,22 +35,22 @@ class ResultsParser(parser.HTMLParser):
     scores = []
     attr = ""
     competition = -1
+
     def handle_starttag(self, tag, attrs):
         if len(attrs) > 0:
             if attrs[0][0] == "class":
                 self.attr = attrs[0][1]
 
     def handle_data(self, data):
-        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos']:
+        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura']:
             return
         else:
             data = data.strip()
         if self.attr == 'Sarja':
             self.serie = player.SERIES[data]
-
-        if self.attr == 'Kilpailu':
+        elif self.attr == 'Kilpailu':
             self.competition = self.competition + 1
-        if self.attr == 'Sija':
+        elif self.attr == 'Sija':
             if self.name is not None and self.position is not None:
                 self.resultlist.append({'competition': self.competition,
                                         'serie': self.serie,
@@ -42,11 +61,11 @@ class ResultsParser(parser.HTMLParser):
             self.position = data
             self.name = None
             self.scores = []
-        if self.attr == 'Nimi':
+        elif self.attr == 'Nimi':
             self.name = data.strip()
-        if self.attr == 'Seura':
+        elif self.attr == 'Seura':
             self.team = data
-        if self.attr == 'Tulos':
+        elif self.attr == 'Tulos':
             self.scores.append(data)
 
     def get_result_list(self):
@@ -80,23 +99,6 @@ class ResultDB():
         # self.read_result_file(result_file_name, playerdb)
         self.parse_html_file(result_file_name, playerdb)
 
-    def generate_player_list(self, result_file_name, playerdb):
-        """Read results from html"""
-        self.result_list = []
-        with codecs.open(result_file_name, 'r', 'ISO-8859-1') as result_file:
-            lines = ""
-            for line in result_file:
-                lines = lines + line
-            resultparser = ResultsParser()
-            resultparser.feed(lines)
-            result_list = resultparser.get_result_list()
-            players=[]
-            for result in result_list:
-                players.append(result['serie'] + "," + result['name'])
-            unique_players=list(set(players))
-            sorted_players=sorted(unique_players)
-            for p in sorted_players:
-                print(p)
 
 
     def parse_html_file(self, result_file_name, playerdb):
