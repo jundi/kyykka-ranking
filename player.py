@@ -23,9 +23,10 @@ SERIES = {
 
 class Player():
 
-    def __init__(self, id, name, serie='MM'):
+    def __init__(self, id, name, serie='MM', aliases=[]):
         self.id = id
         self.name = name
+        self.aliases = aliases
         if serie in list(SERIES.values()):
             self.serie = serie
         else:
@@ -53,15 +54,16 @@ class PlayerDB():
                 self.player_list.append(
                     Player(
                         id = n,
-                        name = fields[1],
                         serie = fields[0],
+                        name = fields[1],
+                        aliases = fields[2:]
                         )
                 )
                 n = n+1
 
     def get_player_with_name(self, name):
         for player in self.player_list:
-            if player.name == name:
+            if player.name == name or name in player.aliases:
                 return player
         raise ValueError('Player "{}" not known'.format(name))
 

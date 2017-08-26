@@ -49,7 +49,8 @@ class ResultsParser(parser.HTMLParser):
         elif self.attr == 'Kilpailu':
             self.competition = self.competition + 1
         elif self.attr == 'Sija':
-            if self.name is not None and self.position is not None:
+            if self.name is not None\
+                    and self.position is not None:
                 self.resultlist.append({'competition': self.competition,
                                         'serie': self.serie,
                                         'position': self.position,
@@ -60,6 +61,8 @@ class ResultsParser(parser.HTMLParser):
             self.name = None
             self.scores = []
         elif self.attr == 'Nimi':
+            self.name = data.strip()
+        elif self.attr == 'JP-seura':
             self.name = data.strip()
         elif self.attr == 'Seura':
             self.team = data
@@ -94,10 +97,8 @@ class Result():
 class ResultDB():
     """Result database class"""
     def __init__(self, result_file_name, playerdb):
-        # self.read_result_file(result_file_name, playerdb)
         self.result_list = []
         self.parse_html_file(result_file_name, playerdb)
-
 
 
     def parse_html_file(self, result_file_name, playerdb):
@@ -111,10 +112,11 @@ class ResultDB():
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
             for result in result_list:
-                try:
-                    playerdb.get_player_with_name(result['name']).id
-                except ValueError:
-                    print('Unknown player: {},{}'.format(result['serie'],
+                # print(result)
+                # try:
+                    # playerdb.get_player_with_name(result['name']).id
+                # except ValueError:
+                    # print('Unknown player: {},{}'.format(result['serie'],
                                                          result['name']))
                 self.result_list.append(
                     Result(
@@ -135,6 +137,7 @@ class ResultDB():
                 return result.position
         return None
 
+
     def get_player_result(self, player_id, competition_id):
         """Get result of player in competition"""
         for result in self.result_list:
@@ -143,6 +146,7 @@ class ResultDB():
                 return result
         return None
 
+
     def get_player_competitions(self, player_id):
         """Get list of competitions the player has attended"""
         competition_id_list = []
@@ -150,6 +154,7 @@ class ResultDB():
             if result.player_id == player_id:
                 competition_id_list.append(result.competition_id)
         return competition_id_list
+
 
     def read_result_file(self, result_file_name, playerdb):
         """Initialize the result database from file"""
