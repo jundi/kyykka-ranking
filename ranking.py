@@ -5,9 +5,11 @@ import HTML
 from competition import CompetitionDB
 from player import PlayerDB
 from result import ResultDB
+# pylint: disable=import-error
 from points import Points, PointsDB
 
 
+# pylint: disable=too-many-arguments
 def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
                     point_type, tag):
     """Get list of  qualification points"""
@@ -22,17 +24,20 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
         cells = []
         cells.append(player.name)
         for competition in competitiondb.get_competitions_with_tag(tag):
-            result = resultdb.get_player_result(player.id, competition.competition_id)
+            result = resultdb.get_player_result(player.id,
+                                                competition.competition_id)
             if result is None:
                 cells.append("")
             else:
-                points = getattr(Points(competition, player, result), point_type)()
+                points = getattr(Points(competition, player, result),
+                                 point_type)()
                 cells.append(points)
         cells.append(getattr(pointdb, point_type)(player_id))
         rows.append(cells)
     return rows
 
 def print_html_table(table, competitiondb, tag):
+    """Print list of lists as html table"""
     header_row = ['']
     for competition in competitiondb.get_competitions_with_tag(tag):
         header_row.append(competition.name)
@@ -40,7 +45,7 @@ def print_html_table(table, competitiondb, tag):
 
     print(HTML.Table(table, header_row=header_row))
 
-HEAD="""<!DOCTYPE html>
+HEAD = """<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -72,7 +77,7 @@ HEAD="""<!DOCTYPE html>
 <body>
 """
 
-TAIL="""</body>
+TAIL = """</body>
 </html>"""
 
 def main():
@@ -84,18 +89,27 @@ def main():
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     print(HEAD)
+
     print("<h2>MM karsinta</h2>")
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mm_points', 'mm_kars')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MM', 'mm_points', 'mm_kars')
     print_html_table(tbl, competitiondb, 'mm_kars')
 
-
     print("<h2>Maaottelu karsinta</h2>")
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'mo_points', 'mo_kars')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MM', 'mo_points', 'mo_kars')
     print_html_table(tbl, competitiondb, 'mo_kars')
 
     print("<h2>MM Cup</h2>")
-    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb, 'MM', 'cup_points', 'MM_cup')
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MM', 'cup_points', 'MM_cup')
     print_html_table(tbl, competitiondb, 'MM_cup')
+
+    print("<h2>MJ Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MJ', 'cup_points', 'MJ_cup')
+    print_html_table(tbl, competitiondb, 'MJ_cup')
+
     print(TAIL)
 
 
