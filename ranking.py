@@ -90,7 +90,7 @@ def main():
 
     print(HEAD)
 
-    print("<h2>MM karsinta</h2>")
+    print("<h2>MM-kisa karsinta</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
                           'MM', 'mm_points', 'mm_kars')
     print_html_table(tbl, competitiondb, 'mm_kars')
