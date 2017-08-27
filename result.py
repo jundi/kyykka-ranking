@@ -38,28 +38,33 @@ class ResultsParser(parser.HTMLParser):
         if attrs:
             if attrs[0][0] == "class":
                 self.attr = attrs[0][1]
+                if self.name is  None\
+                    or self.position is None:
+                    return
+                if self.attr in ['Sija', 'Sarja', 'Kilpailu']:
+                    self.resultlist.append({'competition': self.competition,
+                                            'serie': self.serie,
+                                            'position': self.position,
+                                            'name': self.name,
+                                            'scores': self.scores})
+                    self.name = None
+                    self.position = None
+                    self.scores = []
 
     def handle_data(self, data):
-        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura']:
+        if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura', '',
+                    'Alkuun']:
             return
         else:
             data = data.strip()
+        if data == '':
+            return
         if self.attr == 'Sarja':
             self.serie = player.SERIES[data]
         elif self.attr == 'Kilpailu':
             self.competition = self.competition + 1
         elif self.attr == 'Sija':
-            if self.name is not None\
-                    and self.position is not None:
-                self.resultlist.append({'competition': self.competition,
-                                        'serie': self.serie,
-                                        'position': self.position,
-                                        'name': self.name,
-                                        'scores': self.scores})
-            self.name = None
             self.position = data
-            self.name = None
-            self.scores = []
         elif self.attr == 'Nimi':
             self.name = data.strip()
         elif self.attr == 'JP-seura':
@@ -112,12 +117,6 @@ class ResultDB():
             resultparser.feed(lines)
             result_list = resultparser.get_result_list()
             for result in result_list:
-                # print(result)
-                # try:
-                    # playerdb.get_player_with_name(result['name']).id
-                # except ValueError:
-                    # print('Unknown player: {},{}'.format(result['serie'],
-                                                         result['name']))
                 self.result_list.append(
                     Result(
                         result['competition'],
