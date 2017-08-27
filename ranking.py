@@ -46,7 +46,11 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
 def print_html_table(table, competitiondb, tag):
     """Print list of lists as html table"""
     header_row = ['']
-    for competition in competitiondb.get_competitions_with_tag(tag):
+    if tag is None:
+        competitions = competitiondb.competition_list
+    else:
+        competitions = competitiondb.get_competitions_with_tag(tag)
+    for competition in competitions:
         header_row.append(competition.name)
     header_row.append('yht.')
 
