@@ -167,6 +167,9 @@ class ResultDB():
                 if line.startswith('#'):
                     continue
 
+                if line.strip() == '':
+                    continue
+
                 fields = str2list(line)
                 competition_id = int(fields[0])
                 serie = fields[1]

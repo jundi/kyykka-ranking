@@ -85,6 +85,7 @@ def main():
     competitiondb = CompetitionDB('data/kisat')
     playerdb = PlayerDB('data/pellaajat')
     resultdb = ResultDB('data/results.htm', playerdb)
+    resultdb.read_result_file('data/loppukauden_tulokset', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)
 
     print(HEAD)
