@@ -21,7 +21,11 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
         player = playerdb.get_player_with_id(player_id)
         cells = []
         cells.append(player.name)
-        for competition in competitiondb.get_competitions_with_tag(tag):
+        if tag is None:
+            competitions = competitiondb.competition_list
+        else:
+            competitions = competitiondb.get_competitions_with_tag(tag)
+        for competition in  competitions:
             result = resultdb.get_player_result(player.id,
                                                 competition.competition_id,
                                                 serie)
@@ -133,6 +137,12 @@ def main():
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
                           'NV', 'cup_points', 'NV_cup')
     print_html_table(tbl, competitiondb, 'NV_cup')
+
+    print("<h2>Vuoden pelaaja MM</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MM', 'poy_points', None)
+    print_html_table(tbl, competitiondb, None)
+
 
     print(TAIL)
 

@@ -104,10 +104,10 @@ class Points():
 
         if self.serie in ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MT', 'NP']:
             points = POY_POINTS
-            if self.competition.is_cup:
+            if self.serie in self.competition.cup:
                 points = POY_POINTS_CUP
 
-            if self.competition.is_sm:
+            if 'henk_sm' in self.competition.tags:
                 points = POY_POINTS_SM
             return self.get_points(points, self.position)+1 # One point for attending
         return None
@@ -163,7 +163,7 @@ class PointsDB():
         for competition in self.competitiondb.competition_list:
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.id,
+                competition.competition_id,
                 serie
             )
             if result is None:
