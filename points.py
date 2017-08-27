@@ -59,7 +59,7 @@ class Points():
 
         if not self.serie in self.competition.cup:
             return None
-        if self.serie in ['MM', 'NM']:
+        if self.serie in ['MM', 'NM', 'NV', 'MV']:
             points = CUP_POINTS
             if 'henk_sm' in self.competition.tags\
                     or 'cup_finaali' in self.competition.tags:
@@ -121,7 +121,7 @@ class PointsDB():
         self.resultdb = resultdb
 
 
-    def cup_points(self, player_id):
+    def cup_points(self, player_id, serie):
         cup_points = []
         cup_pentathlon_points = 0
         player = self.playerdb.get_player_with_id(player_id)
@@ -129,7 +129,8 @@ class PointsDB():
         for competition in self.competitiondb.competition_list:
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.competition_id
+                competition.competition_id,
+                serie
             )
             if result is None:
                 # Did not attend
@@ -155,14 +156,15 @@ class PointsDB():
         return cup_point_sum
 
 
-    def poy_points(self, player_id):
+    def poy_points(self, player_id, serie):
         poy_points = []
         player = self.playerdb.get_player_with_id(player_id)
 
         for competition in self.competitiondb.competition_list:
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.id
+                competition.id,
+                serie
             )
             if result is None:
                 # Did not attend
@@ -174,14 +176,15 @@ class PointsDB():
         return poy_point_sum
 
 
-    def mm_points(self, player_id):
+    def mm_points(self, player_id, serie):
         # World cup qualification points
         mm_points = []
 
         for competition in self.competitiondb.get_competitions_with_tag('mm_kars'):
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.competition_id
+                competition.competition_id,
+                serie
             )
             if result is None:
                 # Did not attend
@@ -192,7 +195,7 @@ class PointsDB():
         mm_point_sum = sum(sorted(remove_none_elements_from_list(mm_points))[-MAX_MM_COMPETITIONS:])
         return mm_point_sum
 
-    def mo_points(self, player_id):
+    def mo_points(self, player_id, serie):
         # Northern countries championship qualification points
         mo_points = []
         sm_points = 0
@@ -202,7 +205,8 @@ class PointsDB():
                 continue
             result = self.resultdb.get_player_result(
                 player_id,
-                competition.competition_id
+                competition.competition_id,
+                serie
             )
 
             if 'henk_sm' in competition.tags:
@@ -217,12 +221,12 @@ class PointsDB():
 
         return mo_point_sum
 
-    def sort_players(self, attribute_name):
+    def sort_players(self, attribute_name, serie):
 
         attribute_dict = {}
         for player in self.playerdb.player_list:
-            if self.resultdb.player_has_results(player.id):
-                attribute = getattr(self, attribute_name)(player.id)
+            if self.resultdb.player_has_results(player.id, serie):
+                attribute = getattr(self, attribute_name)(player.id, serie)
                 attribute_dict[player.id] = attribute
 
         sorted_player_ids = (sorted(attribute_dict, key=attribute_dict.get)[::-1])

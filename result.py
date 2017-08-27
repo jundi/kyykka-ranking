@@ -137,10 +137,11 @@ class ResultDB():
         return None
 
 
-    def get_player_result(self, player_id, competition_id):
+    def get_player_result(self, player_id, competition_id, serie):
         """Get result of player in competition"""
         for result in self.result_list:
             if (result.player_id == player_id) \
+                    and (result.serie == serie)\
                     and (result.competition_id == competition_id):
                 return result
         return None
@@ -192,9 +193,10 @@ class ResultDB():
                 )
 
 
-    def player_has_results(self, player_id):
+    def player_has_results(self, player_id, serie):
         """Check if player has attended any competitions"""
         for result in self.result_list:
-            if result.player_id == player_id:
+            if result.player_id == player_id\
+                    and result.serie == serie:
                 return True
         return False

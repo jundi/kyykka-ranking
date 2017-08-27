@@ -14,25 +14,24 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
                     point_type, tag):
     """Get list of  qualification points"""
 
-    sorted_player_ids = pointdb.sort_players(point_type)
+    sorted_player_ids = pointdb.sort_players(point_type, serie)
 
     rows = []
     for player_id in sorted_player_ids:
         player = playerdb.get_player_with_id(player_id)
-        if player.serie != serie:
-            continue
         cells = []
         cells.append(player.name)
         for competition in competitiondb.get_competitions_with_tag(tag):
             result = resultdb.get_player_result(player.id,
-                                                competition.competition_id)
+                                                competition.competition_id,
+                                                serie)
             if result is None:
                 cells.append("")
             else:
                 points = getattr(Points(competition, player, result),
                                  point_type)()
                 cells.append(points)
-        cells.append(getattr(pointdb, point_type)(player_id))
+        cells.append(getattr(pointdb, point_type)(player_id, serie))
         rows.append(cells)
     return rows
 
@@ -105,10 +104,30 @@ def main():
                           'MM', 'cup_points', 'MM_cup')
     print_html_table(tbl, competitiondb, 'MM_cup')
 
-    print("<h2>MJ Cup</h2>")
+    print("<h2>Miesten joukkue Cup</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
                           'MJ', 'cup_points', 'MJ_cup')
     print_html_table(tbl, competitiondb, 'MJ_cup')
+
+    print("<h2>Miesten pari Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MP', 'cup_points', 'MP_cup')
+    print_html_table(tbl, competitiondb, 'MP_cup')
+
+    print("<h2>NM Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'NM', 'cup_points', 'NM_cup')
+    print_html_table(tbl, competitiondb, 'NM_cup')
+
+    print("<h2>MV Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'MV', 'cup_points', 'MV_cup')
+    print_html_table(tbl, competitiondb, 'MV_cup')
+
+    print("<h2>NV Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'NV', 'cup_points', 'NV_cup')
+    print_html_table(tbl, competitiondb, 'NV_cup')
 
     print(TAIL)
 
