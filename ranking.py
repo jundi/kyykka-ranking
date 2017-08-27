@@ -30,7 +30,11 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
             else:
                 points = getattr(Points(competition, player, result),
                                  point_type)()
-                cells.append(points)
+                # number 0 is not printed, string "0" is printed
+                if points == 0:
+                    cells.append("0")
+                else:
+                    cells.append(points)
         cells.append(getattr(pointdb, point_type)(player_id, serie))
         rows.append(cells)
     return rows
