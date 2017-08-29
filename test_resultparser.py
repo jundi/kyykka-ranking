@@ -1,8 +1,9 @@
 """test resultdb"""
 from result import ResultDB
 from player import PlayerDB
+from points import SERIES
 
-playerdb = PlayerDB('data/pellaajat')
+playerdb = PlayerDB(SERIES, 'data/pellaajat')
 result = ResultDB('data/results.htm', playerdb)
 
 for r in result.result_list:

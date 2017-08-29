@@ -6,7 +6,7 @@ from competition import CompetitionDB
 from player import PlayerDB
 from result import ResultDB
 # pylint: disable=import-error
-from points import Points, PointsDB
+from points import Points, PointsDB, SERIES
 
 
 # pylint: disable=too-many-arguments
@@ -94,8 +94,8 @@ TAIL = """</body>
 def main():
     """Main function"""
 
-    competitiondb = CompetitionDB('data/kisat')
-    playerdb = PlayerDB('data/pellaajat')
+    competitiondb = CompetitionDB(SERIES, 'data/kisat')
+    playerdb = PlayerDB(SERIES, 'data/pellaajat')
     resultdb = ResultDB('data/results.htm', playerdb)
     resultdb.read_result_file('data/loppukauden_tulokset', playerdb)
     pointdb = PointsDB(competitiondb, playerdb, resultdb)

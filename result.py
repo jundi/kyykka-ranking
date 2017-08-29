@@ -45,7 +45,7 @@ class ResultDB():
                     Result(
                         result['competition'],
                         playerdb.get_player_with_name(result['name']).id,
-                        player.SERIES[result['serie']],
+                        result['serie'],
                         int(result['position'].strip('.')),
                         result['scores'],
                     )

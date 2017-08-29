@@ -1,40 +1,20 @@
+"""Simple player database"""
 from utils import str2list
 
-SERIES = {
-    'Miesten Mestaruussarja':    'MM',
-    'Miesten A-sarja':           'MA',
-    'Miesten B-sarja':           'MB',
-    'Miesten Veteraanisarja':    'MV',
-    'Naisten Mestaruussarja':    'NM',
-    'Naisten A-sarja':           'NA',
-    'Naisten Veteraanisarja':    'NV',
-    'Miesten joukkuekilpailu':   'MJ',
-    'Miesten parikilpailu':      'MP',
-    'Naisten parikilpailu':      'NP',
-    'Juniorit - 15v sekasarja':  'J15',
-    'Juniorit - 10v sekasarja':  'J10',
-    'Juniorit - 15v pojat':      'JP15',
-    'Juniorit - 15v tytöt':      'JT15',
-    'Juniorit - 10v pojat':      'JP10',
-    'Juniorit - 10v tytöt':      'JT10',
-    'Juniorit - 10v tyt?t':      'JT10',
-    'Juniorit - 10v tytÃ¶t':    'JT10',
-}
-
 class Player():
+    """Player class"""
 
     def __init__(self, id, name, serie='MM', aliases=[]):
         self.id = id
         self.name = name
         self.aliases = aliases
-        if serie in list(SERIES.values()):
-            self.serie = serie
-        else:
-            raise Exception("Unknown serie: " + serie)
+        self.serie = serie
 
 class PlayerDB():
+    """Player database"""
 
-    def __init__(self, player_file_name=None):
+    def __init__(self, series, player_file_name=None):
+        self.series = series
         if player_file_name is not None:
             self.read_file(player_file_name)
 
@@ -50,6 +30,9 @@ class PlayerDB():
                     continue
 
                 fields = str2list(line)
+
+                if fields[0] not in self.series:
+                    raise Exception("Unknown serie: ", fields[0])
 
                 self.player_list.append(
                     Player(

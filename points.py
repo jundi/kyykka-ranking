@@ -2,6 +2,10 @@ import competition
 import player
 import result
 
+
+SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP',
+          'JP15', 'JT15', 'J15', 'JP10', 'JT10', 'J10']
+
 # Number of competitions
 MAX_PAIRS_CUP_COMPETITIONS = 5
 NUM_PAIRS_CUP_COMPETITIONS = 6

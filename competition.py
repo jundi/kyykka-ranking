@@ -1,7 +1,6 @@
 from utils import str2bool
 from utils import str2list
 
-SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP']
 TAGS = ['mm_kars', 'cup_finaali', 'mo_kars', 'joukkue_sm', 'henk_sm', 'vo']
 
 class Competition():
@@ -24,14 +23,15 @@ class Competition():
 
 class CompetitionDB():
 
-    def __init__(self, competition_file_name=None):
+    def __init__(self, series, competition_file_name=None):
+        self.competition_list = []
+        self.series = series
         if competition_file_name is not None:
             self.read_file(competition_file_name)
 
     def read_file(self, competition_file_name):
         # Create competition list from file
         n = 0
-        self.competition_list = []
         with open(competition_file_name, 'r') as competition_file:
             for line in competition_file:
                 cup = []
@@ -46,7 +46,7 @@ class CompetitionDB():
                 for field in fields[1:]:
                     if field == '':
                         continue
-                    if field in SERIES:
+                    if field in self.series:
                         cup.append(field)
                     elif field in TAGS:
                         tags.append(field)

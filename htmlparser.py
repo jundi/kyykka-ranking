@@ -2,6 +2,27 @@
 from html import parser
 import codecs
 
+SERIES = {
+    'Miesten Mestaruussarja':    'MM',
+    'Miesten A-sarja':           'MA',
+    'Miesten B-sarja':           'MB',
+    'Miesten Veteraanisarja':    'MV',
+    'Naisten Mestaruussarja':    'NM',
+    'Naisten A-sarja':           'NA',
+    'Naisten Veteraanisarja':    'NV',
+    'Miesten joukkuekilpailu':   'MJ',
+    'Miesten parikilpailu':      'MP',
+    'Naisten parikilpailu':      'NP',
+    'Juniorit - 15v sekasarja':  'J15',
+    'Juniorit - 10v sekasarja':  'J10',
+    'Juniorit - 15v pojat':      'JP15',
+    'Juniorit - 15v tytöt':      'JT15',
+    'Juniorit - 10v pojat':      'JP10',
+    'Juniorit - 10v tytöt':      'JT10',
+    'Juniorit - 10v tyt?t':      'JT10',
+    'Juniorit - 10v tytÃ¶t':    'JT10',
+}
+
 def generate_player_list(result_file_name):
     """Read results from html"""
     with codecs.open(result_file_name, 'r', 'ISO-8859-15') as result_file:
@@ -58,7 +79,10 @@ class ResultsParser(parser.HTMLParser):
         if data == '':
             return
         if self.attr == 'Sarja':
-            self.serie = data
+            if data in SERIES:
+                self.serie = SERIES[data]
+            else:
+                raise ValueError("Unknown serie: ", data)
         elif self.attr == 'Kilpailu':
             self.competition = self.competition + 1
         elif self.attr == 'Sija':
