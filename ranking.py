@@ -32,7 +32,7 @@ def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
             if result is None:
                 cells.append("")
             else:
-                points = getattr(Points(competition, player, result),
+                points = getattr(Points(competition, result),
                                  point_type)()
                 # number 0 is not printed, string "0" is printed
                 if points == 0:
