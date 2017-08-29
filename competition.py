@@ -1,15 +1,14 @@
 from utils import str2bool
 from utils import str2list
 
-TAGS = ['mm_kars', 'cup_finaali', 'mo_kars', 'joukkue_sm', 'henk_sm', 'vo']
 
 class Competition():
 
     def __init__(self,
                  competition_id,
                  name,
-                 series=['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'NP'],
-                 cup=['NM', 'NM', 'MJ', 'MP', 'NP'],
+                 series=[],
+                 cup=[],
                  tags=[],
                 ):
         self.competition_id = competition_id
@@ -23,9 +22,10 @@ class Competition():
 
 class CompetitionDB():
 
-    def __init__(self, series, competition_file_name=None):
+    def __init__(self, series, allowed_tags, competition_file_name=None):
         self.competition_list = []
         self.series = series
+        self.allowed_tags = allowed_tags
         if competition_file_name is not None:
             self.read_file(competition_file_name)
 
@@ -48,7 +48,7 @@ class CompetitionDB():
                         continue
                     if field in self.series:
                         cup.append(field)
-                    elif field in TAGS:
+                    elif field in self.allowed_tags:
                         tags.append(field)
                     else:
                         raise ValueError('Invalid field: ', field)
