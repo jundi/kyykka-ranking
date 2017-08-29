@@ -132,9 +132,6 @@ class PointsDB():
                 competition.competition_id,
                 serie
             )
-            if result is None:
-                # Did not attend
-                continue
 
             points = Points(competition, player, result).cup_points()
             if points is None:
@@ -151,6 +148,7 @@ class PointsDB():
                     Points(competition, player, result).cup_points()
                 )
 
+        cup_points = remove_none_elements_from_list(cup_points)
         cup_point_sum = cup_pentathlon_points + sum(sorted(cup_points)[-MAX_SINGLES_CUP_COMPETITIONS:])
 
         return cup_point_sum
@@ -166,12 +164,10 @@ class PointsDB():
                 competition.competition_id,
                 serie
             )
-            if result is None:
-                # Did not attend
-                continue
 
             poy_points.append(Points(competition, player, result).poy_points())
 
+        poy_points = remove_none_elements_from_list(poy_points)
         poy_point_sum = sum(poy_points)
         return poy_point_sum
 
@@ -186,13 +182,11 @@ class PointsDB():
                 competition.competition_id,
                 serie
             )
-            if result is None:
-                # Did not attend
-                continue
 
             mm_points.append(Points(competition, player, result).mm_points())
 
-        mm_point_sum = sum(sorted(remove_none_elements_from_list(mm_points))[-MAX_MM_COMPETITIONS:])
+        mm_points = remove_none_elements_from_list(mm_points)
+        mm_point_sum = sum(sorted(mm_points)[-MAX_MM_COMPETITIONS:])
         return mm_point_sum
 
     def mo_points(self, player_id, serie):
@@ -217,7 +211,8 @@ class PointsDB():
 
             mo_points.append(Points(competition, player, result).mo_points())
 
-        mo_point_sum = sm_points + sum(sorted(remove_none_elements_from_list(mo_points))[-MAX_MO_COMPETITIONS:])
+        mo_points = remove_none_elements_from_list(mo_points)
+        mo_point_sum = sm_points + sum(sorted(mo_points)[-MAX_MO_COMPETITIONS:])
 
         return mo_point_sum
 
