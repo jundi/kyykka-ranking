@@ -9,7 +9,7 @@ Cup-points, qualification points, and player of the year -points.
 SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP',
           'JP15', 'JT15', 'J15', 'JP10', 'JT10', 'J10']
 
-TAGS = ['mm_kars', 'cup_finaali', 'mo_kars', 'joukkue_sm', 'henk_sm', 'vo']
+TAGS = ['mm_kars', 'mo_kars', 'henk_sm', 'vo', 'HK_cup_plus', 'NP_cup_plus', 'MP_cup_plus', 'MJ_cup_plus']
 
 # Number of competitions
 MAX_PAIRS_CUP_COMPETITIONS = 5
@@ -76,14 +76,13 @@ class Points():
             return None
         if self.serie in ['MM', 'NM', 'NV', 'MV']:
             points = CUP_POINTS
-            if 'henk_sm' in self.competition.tags\
-                    or 'cup_finaali' in self.competition.tags:
+            if 'HK_cup_plus' in self.competition.tags:
                 points = CUP_POINTS_SM
 
         elif self.serie in ['MJ', 'MP', 'NP']:
             points = CUP_POINTS_TEAM
-            if 'joukkue_sm' in self.competition.tags\
-                    or 'cup_finaali' in self.competition.tags:
+            cup_plus_tag = self.serie + "_cup_plus"
+            if cup_plus_tag in self.competition.tags:
                 points = CUP_POINTS_TEAM_SM
         else:
             raise ValueError
@@ -125,9 +124,6 @@ class Points():
             points = POY_POINTS_CUP
         if self.serie in ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV']:
             if 'henk_sm' in self.competition.tags:
-                points = POY_POINTS_SM
-        elif self.serie in ['MT', 'MP', 'NP']:
-            if 'joukkue_sm' in self.competition.tags:
                 points = POY_POINTS_SM
 
         # One additional point for attending
