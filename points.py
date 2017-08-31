@@ -156,7 +156,7 @@ class PointsDB():
                 # No points for this cup
                 continue
 
-            if 'vo' in competition.tags:
+            if 'vo' in competition.tags and serie not in ['MP','MJ','NP']:
                 cup_pentathlon_points = max(
                     cup_pentathlon_points,
                     Points(competition, result).cup_points()
