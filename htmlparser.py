@@ -8,6 +8,7 @@ SERIES = {
     'Miesten B-sarja':           'MB',
     'Miesten Veteraanisarja':    'MV',
     'Naisten Mestaruussarja':    'NM',
+    'Naisten  Mestaruussarja':    'NM',
     'Naisten A-sarja':           'NA',
     'Naisten Veteraanisarja':    'NV',
     'Miesten joukkuekilpailu':   'MJ',
