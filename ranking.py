@@ -9,7 +9,7 @@ from result import ResultDB
 from points import Points, PointsDB, SERIES, TAGS
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments,too-many-locals
 def get_point_table(competitiondb, playerdb, resultdb, pointdb, serie,
                     point_type, tag):
     """Get list of  qualification points"""
@@ -131,6 +131,11 @@ def main():
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
                           'NM', 'cup_points', 'NM_cup')
     print_html_table(tbl, competitiondb, 'NM_cup')
+
+    print("<h2>Naisten pari Cup</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'NP', 'cup_points', 'NP_cup')
+    print_html_table(tbl, competitiondb, 'NP_cup')
 
     print("<h2>MV Cup</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
