@@ -58,18 +58,22 @@ class ResultsParser(parser.HTMLParser):
         if attrs:
             if attrs[0][0] == "class":
                 self.attr = attrs[0][1]
-                if self.name is  None\
-                    or self.position is None:
-                    return
-                if self.attr in ['Sija', 'Sarja', 'Kilpailu']:
-                    self.resultlist.append({'competition': self.competition,
-                                            'serie': self.serie,
-                                            'position': self.position,
-                                            'name': self.name,
-                                            'scores': self.scores})
-                    self.name = None
-                    self.position = None
-                    self.scores = []
+                self.add_result()
+
+    def add_result(self):
+        """Add new result to list"""
+        if self.name is  None\
+            or self.position is None:
+            return
+        if self.attr in ['Sija', 'Sarja', 'Kilpailu']:
+            self.resultlist.append({'competition': self.competition,
+                                    'serie': self.serie,
+                                    'position': self.position,
+                                    'name': self.name,
+                                    'scores': self.scores})
+            self.name = None
+            self.position = None
+            self.scores = []
 
     def handle_data(self, data):
         if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura', '',
@@ -100,8 +104,3 @@ class ResultsParser(parser.HTMLParser):
     def get_result_list(self):
         """Return list of results"""
         return self.resultlist
-
-
-
-
-
