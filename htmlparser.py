@@ -24,6 +24,11 @@ SERIES = {
     'Juniorit - 10v tytÃ¶t':    'JT10',
 }
 
+NOTES = {'SE-siv.':'SE-siv',
+         '*SE siv.*':'SE-siv',
+         'SE*':'SE',
+         '*SE*':'SE'}
+
 def generate_player_list(result_file_name):
     """Read results from html"""
     with codecs.open(result_file_name, 'r', 'ISO-8859-15') as result_file:
@@ -50,6 +55,7 @@ class ResultsParser(parser.HTMLParser):
     name = None
     team = None
     serie = None
+    note = None
     scores = []
     attr = ""
     competition = -1
@@ -70,14 +76,16 @@ class ResultsParser(parser.HTMLParser):
                                     'serie': self.serie,
                                     'position': self.position,
                                     'name': self.name,
-                                    'scores': self.scores})
+                                    'scores': self.scores,
+                                    'note':self.note})
             self.name = None
             self.position = None
             self.scores = []
+            self.note = None
 
     def handle_data(self, data):
         if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura', '',
-                    'Alkuun']:
+                    'Alkuun', 'Huom!']:
             return
         else:
             data = data.strip()
@@ -100,6 +108,11 @@ class ResultsParser(parser.HTMLParser):
             self.team = data
         elif self.attr == 'Tulos':
             self.scores.append(data)
+        elif self.attr == 'Huom':
+            if data in NOTES:
+                self.note = NOTES[data]
+            else:
+                raise ValueError("Unknown note: ", data)
 
     def get_result_list(self):
         """Return list of results"""

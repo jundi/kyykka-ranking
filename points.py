@@ -66,6 +66,7 @@ class Points():
         else:
             self.position = result.position
             self.serie = result.serie
+            self.note = result.note
 
     def cup_points(self):
         """Cup points"""
@@ -126,8 +127,15 @@ class Points():
             if 'henk_sm' in self.competition.tags:
                 points = POY_POINTS_SM
 
+        if self.note == 'SE':
+            SE_points = 60
+        elif self.note == 'SE-siv':
+            SE_points = 50
+        else:
+            SE_points = 0
+
         # One additional point for attending
-        return read_point_table(points, self.position)+1
+        return read_point_table(points, self.position)+SE_points+1
 
 
 class PointsDB():

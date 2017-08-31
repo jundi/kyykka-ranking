@@ -15,12 +15,14 @@ class Result():
                  serie,
                  position,
                  scores,
+                 note=None,
                 ):
         self.competition_id = competition_id
         self.player_id = player_id
         self.serie = serie
         self.position = position
         self.scores = scores
+        self.note = note
 
 
 class ResultDB():
@@ -48,6 +50,7 @@ class ResultDB():
                         result['serie'],
                         int(result['position'].strip('.')),
                         result['scores'],
+                        result['note']
                     )
                 )
 
@@ -87,6 +90,7 @@ class ResultDB():
 
         with open(result_file_name, 'r') as result_file:
             for line in result_file:
+                note = None
 
                 if line.startswith('#'):
                     continue
@@ -99,6 +103,11 @@ class ResultDB():
                 serie = fields[1]
                 name = fields[2]
                 scores = [int(x) for x in fields[3:]]
+                for field in fields[3:]:
+                    try:
+                        scores.append(int(field))
+                    except ValueError:
+                        note = field
 
                 if not (competition_id == last_competition_id \
                         and serie == last_serie):
@@ -116,6 +125,7 @@ class ResultDB():
                         serie,
                         position,
                         scores,
+                        note
                     )
                 )
 
