@@ -112,6 +112,11 @@ def main():
                           'MM', 'mo_points', 'mo_kars')
     print_html_table(tbl, competitiondb, 'mo_kars')
 
+    print("<h2>Maaottelu karsinta, naiset</h2>")
+    tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
+                          'NM', 'mo_points', 'mo_kars')
+    print_html_table(tbl, competitiondb, 'mo_kars')
+
     print("<h2>MM Cup</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
                           'MM', 'cup_points', 'MM_cup')
@@ -149,8 +154,8 @@ def main():
 
     print("<h2>Vuoden pelaaja MM</h2>")
     tbl = get_point_table(competitiondb, playerdb, resultdb, pointdb,
-                          'MM', 'poy_points', None)
-    print_html_table(tbl, competitiondb, None)
+                          'MM', 'poy_points', 'VP')
+    print_html_table(tbl, competitiondb, 'VP')
 
 
     print(TAIL)

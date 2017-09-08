@@ -9,7 +9,7 @@ Cup-points, qualification points, and player of the year -points.
 SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP',
           'JP15', 'JT15', 'J15', 'JP10', 'JT10', 'J10']
 
-TAGS = ['mm_kars', 'mo_kars', 'henk_sm', 'vo', 'HK_cup_plus', 'NP_cup_plus', 'MP_cup_plus', 'MJ_cup_plus']
+TAGS = ['mm_kars', 'mo_kars', 'henk_sm', 'vo', 'HK_cup_plus', 'NP_cup_plus', 'MP_cup_plus', 'MJ_cup_plus', 'VP']
 
 # Number of competitions
 MAX_PAIRS_CUP_COMPETITIONS = 5
@@ -118,6 +118,9 @@ class Points():
     def poy_points(self):
         """Player of the year points"""
         if self.position is None:
+            return None
+
+        if not 'VP' in self.competition.tags:
             return None
 
         points = POY_POINTS
