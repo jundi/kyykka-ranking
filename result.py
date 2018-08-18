@@ -1,7 +1,5 @@
 """Result database module"""
-from html import parser
 import codecs
-import player
 import htmlparser
 from utils import str2list
 

@@ -4,8 +4,10 @@ from utils import str2list
 class Player():
     """Player class"""
 
-    def __init__(self, id, name, serie='MM', aliases=[]):
-        self.id = id
+    def __init__(self, identity, name, serie='MM', aliases=None):
+        if not aliases:
+            aliases = []
+        self.id = identity
         self.name = name
         self.aliases = aliases
         self.serie = serie
@@ -19,9 +21,14 @@ class PlayerDB():
             self.read_file(player_file_name)
 
     def read_file(self, player_file_name):
+        """Read player list file.
+
+        :param player_file_name: Path to player list file
+        :returns: None
+        """
 
         # Create player list from file
-        n = 0
+        player_id = 0
         self.player_list = []
         with open(player_file_name, 'r') as player_file:
             for line in player_file:
@@ -35,31 +42,43 @@ class PlayerDB():
                     raise Exception("Unknown serie: ", fields[0])
 
                 self.player_list.append(
-                    Player(
-                        id = n,
-                        serie = fields[0],
-                        name = fields[1],
-                        aliases = fields[2:]
-                        )
+                    Player(identity=player_id,
+                           serie=fields[0],
+                           name=fields[1],
+                           aliases=fields[2:])
                 )
-                n = n+1
+                player_id = player_id+1
 
     def get_player_with_name(self, name):
+        """Find player by name
+
+        :param name: Player name
+        :returns: Player object
+        """
         for player in self.player_list:
             if player.name == name or name in player.aliases:
                 return player
         raise ValueError('Player "{}" not known'.format(name))
 
     def get_player_with_id(self, player_id):
+        """Find player by ID
+
+        :param player_id: Player ID
+        :returns: Player object
+        """
         for player in self.player_list:
             if player.id == player_id:
                 return player
-        raise Exception('Player "{}" not known in serie {}'.format(player_id, serie))
+        raise Exception('Player "{}" not known'.format(player_id))
 
     def get_players_of_serie(self, serie):
+        """Find all players in serie
+
+        :param serie: serie
+        :returns: list of players in serie.
+        """
         player_list = []
         for player in self.player_list:
             if player.serie == serie:
                 player_list.append(player)
         return player_list
-
