@@ -84,11 +84,11 @@ class ResultsParser(parser.HTMLParser):
             self.note = None
 
     def handle_data(self, data):
+        """Read one row of data"""
         if data in ['\n', '\n ', '\n  ', 'Sija', 'Nimi', 'Tulos', 'Seura', '',
                     'Alkuun', 'Huom!']:
             return
-        else:
-            data = data.strip()
+        data = data.strip()
         if data == '':
             return
         if self.attr == 'Sarja':

@@ -13,4 +13,4 @@ def str2bool(string):
     elif string in ('True', '1'):
         return True
     else:
-        raise Exception
+        raise ValueError("%s is not boolean" % string)
