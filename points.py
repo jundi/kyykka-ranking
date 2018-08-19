@@ -9,7 +9,8 @@ Cup-points, qualification points, and player of the year -points.
 SERIES = ['MM', 'MA', 'MB', 'MV', 'NM', 'NA', 'NV', 'MJ', 'MP', 'NP',
           'JP15', 'JT15', 'J15', 'JP10', 'JT10', 'J10']
 
-TAGS = ['mm_kars', 'mo_kars', 'henk_sm', 'vo', 'HK_cup_plus', 'NP_cup_plus', 'MP_cup_plus', 'MJ_cup_plus', 'VP']
+TAGS = ['mm_kars', 'mo_kars', 'henk_sm', 'vo', 'HK_cup_plus',
+        'NP_cup_plus', 'MP_cup_plus', 'MJ_cup_plus', 'VP']
 
 # Number of competitions
 MAX_PAIRS_CUP_COMPETITIONS = 5
@@ -43,9 +44,11 @@ POY_POINTS_SM      = [30, 20, 10,  5,  3,  1,                ]
 MO_POINTS          = [10,  9,  8,  7,  6,  5,  4,  3,  2,  1,]
 MO_POINTS_SM       = [15, 12,  9,  7,  6,  5,  4,  3,  2,  1,]
 
+
 def remove_none_elements_from_list(lst):
     """Removes elements with value None from list"""
-    return [e for e in lst if e != None]
+    return [e for e in lst if e is not None]
+
 
 def read_point_table(point_list, position):
     """Return points according to the list, and zero points if points is
@@ -131,14 +134,14 @@ class Points():
                 points = POY_POINTS_SM
 
         if self.note == 'SE':
-            SE_points = 60
+            se_points = 60
         elif self.note == 'SE-siv':
-            SE_points = 50
+            se_points = 50
         else:
-            SE_points = 0
+            se_points = 0
 
         # One additional point for attending
-        return read_point_table(points, self.position)+SE_points+1
+        return read_point_table(points, self.position)+se_points+1
 
 
 class PointsDB():
